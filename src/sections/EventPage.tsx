@@ -287,7 +287,7 @@ export default function EventPage() {
             msOverflowStyle: "none",
             WebkitOverflowScrolling: "touch",
           }}>
-            {events.map(({ num, label, sub, date, day, accent, glow, img, imgH, imgPos, titleTop, cardPad }) => (
+            {events.map(({ num, label, sub, date, day, accent, glow, img, imgH, imgPos, titleTop, cardPad, mapsUrl }) => (
               <motion.div key={label} variants={fadeSlide}
                 whileHover={isMobile ? undefined : { scale: 1.015, boxShadow: "0 20px 60px rgba(0,0,0,0.6)" }}
                 style={{
@@ -433,7 +433,7 @@ export default function EventPage() {
           </motion.div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {schedule.map(({ date, day, event, venue, time, dress, note }, i, arr) => (
+            {schedule.map(({ date, day, event, venue, time, dress, note, mapsUrl }, i, arr) => (
               <motion.div key={i} variants={fadeSlide} style={{
                 display: "grid",
                 gridTemplateColumns: "clamp(50px,13vw,68px) 1px 1fr",
