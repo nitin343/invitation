@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^6.2.1",
     "@react-spring/three": "^10.0.3",
     "@react-three/drei": "^10.7.7",

@@ -22,6 +22,7 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [pin, setPin] = useState("");
   const [rsvps, setRsvps] = useState<RSVP[]>([]);
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   // Load data from Backend
@@ -35,7 +36,21 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
         console.error("Failed to fetch stats:", err);
       }
     };
-    if (isAuthorized) fetchStats();
+
+    const fetchAISummary = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/admin/ai-analysis");
+        const json = await res.json();
+        setAiSummary(json.summary);
+      } catch (err) {
+        console.error("AI Analysis failed");
+      }
+    };
+
+    if (isAuthorized) {
+      fetchStats();
+      fetchAISummary();
+    }
   }, [isAuthorized]);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -130,6 +145,19 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
           <span style={{ fontSize: 24, fontWeight: 700 }}>{stats.veg}</span>
         </div>
       </div>
+
+      {/* AI Insights */}
+      {aiSummary && (
+        <div style={{ marginBottom: 48, background: "rgba(251,191,36,0.05)", padding: 24, borderRadius: 16, border: "1px solid rgba(251,191,36,0.2)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+            <span style={{ fontSize: 18 }}>✨</span>
+            <span style={{ fontSize: 11, letterSpacing: 2, fontWeight: 700, color: AMBER, textTransform: "uppercase" }}>AI Sentiment Analysis</span>
+          </div>
+          <div style={{ fontSize: 15, color: "rgba(232,223,208,0.9)", lineHeight: 1.6, fontStyle: "italic" }}>
+            "{aiSummary}"
+          </div>
+        </div>
+      )}
 
       {/* Guest List */}
       <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.05)", overflow: "hidden" }}>

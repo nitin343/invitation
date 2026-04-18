@@ -3,6 +3,7 @@ import GateScreen from "./sections/GateScreen";
 import CinematicLoveSection from "./sections/CinematicLoveSection";
 import EventPage from "./sections/EventPage";
 import Dashboard from "./sections/Dashboard";
+import AIConcierge from "./components/AIConcierge";
 
 type Phase = "gate" | "cinema" | "event" | "dashboard";
 
@@ -16,6 +17,7 @@ export default function App() {
 
   return (
     <>
+      <AIConcierge />
       {phase === "gate" && (
         <GateScreen
           onComplete={() => setPhase("cinema")}

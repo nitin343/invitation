@@ -1,14 +1,83 @@
 const express = require('express');
 const cors = require('cors');
-const { PrismaClient } = require('@prisma/client');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 require('dotenv').config();
 
 const app = express();
 const prisma = new PrismaClient();
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const PORT = process.env.PORT || 5000;
+
+// --- AI Context ---
+const weddingContext = `
+You are the personal AI Wedding Concierge for Niteen and Apoorva's wedding.
+Details:
+- Date: 26 April 2026
+- Main Venue: GMA Kalyan Mantapa, Ganj, Bidar (Reception 25th, Wedding 26th)
+- Haldi: 23 April in Bidar
+- Bidar Reception: 28 April at Shree Function Hall, Bidar
+- Couple: Niteen (Groom) and Apoorva (Bride)
+- Dress Code: Traditional for wedding, Formal/Ethnic for Reception.
+Be warm, polite, and helpful. Use emojis like 💍, 🌸, and ✨. 
+Keep answers concise and elegant.
+`;
 
 app.use(cors());
 app.use(express.json());
+
+// --- AI Chat Endpoint ---
+app.post('/api/ai/chat', async (req, res) => {
+  try {
+    const { message, history } = req.body;
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const chat = model.startChat({
+      history: [
+        { role: "user", parts: [{ text: weddingContext }] },
+        { role: "model", parts: [{ text: "I am ready to assist your guests as their Wedding Concierge!" }] },
+        ...(history || [])
+      ]
+    });
+
+    const result = await chat.sendMessage(message);
+    const response = await result.response;
+    res.json({ text: response.text() });
+  } catch (err) {
+    console.error('AI Chat Error:', err);
+    res.status(500).json({ error: 'AI is resting right now. Please try again later.' });
+  }
+});
+
+// --- AI Wish Generator ---
+app.post('/api/ai/generate-wish', async (req, res) => {
+  try {
+    const { guestName } = req.body;
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const prompt = `Write a short, beautiful, and heartfelt one-sentence wedding wish for Niteen and Apoorva from a guest named ${guestName || 'a friend'}. Make it poetic.`;
+    
+    const result = await model.generateContent(prompt);
+    res.json({ wish: result.response.text() });
+  } catch (err) {
+    res.status(500).json({ error: 'AI is feeling shy.' });
+  }
+});
+
+// --- Admin AI Analysis ---
+app.get('/api/admin/ai-analysis', async (req, res) => {
+  try {
+    const rsvps = await prisma.guest.findMany({ where: { rsvpStatus: 'attending' } });
+    const messages = rsvps.map(r => r.message).filter(Boolean).join('\n');
+    
+    if (!messages) return res.json({ summary: "No messages to analyze yet!" });
+
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const prompt = `Analyze these wedding guest messages and provide a 2-sentence summary of the overall vibe and any special requests or common themes: \n${messages}`;
+    
+    const result = await model.generateContent(prompt);
+    res.json({ summary: result.response.text() });
+  } catch (err) {
+    res.status(500).json({ error: 'Analysis failed.' });
+  }
+});
 
 // Logging middleware
 app.use((req, res, next) => {

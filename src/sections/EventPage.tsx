@@ -108,6 +108,27 @@ export default function EventPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [isMobile, setIsMobile] = useState(false);
+  const [isGeneratingWish, setIsGeneratingWish] = useState(false);
+
+  const generateAIWish = async () => {
+    if (!form.name || isGeneratingWish) return;
+    setIsGeneratingWish(true);
+    try {
+      const res = await fetch("http://localhost:5000/api/ai/generate-wish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ guestName: form.name }),
+      });
+      const data = await res.json();
+      if (data.wish) {
+        setForm(f => ({ ...f, message: data.wish.replace(/"/g, '') }));
+      }
+    } catch (err) {
+      console.error("Wish generation failed");
+    } finally {
+      setIsGeneratingWish(false);
+    }
+  };
 
   useLayoutEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -588,11 +609,25 @@ export default function EventPage() {
 
                 {/* Message Field */}
                 <motion.label variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                  <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Personal Message</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Personal Message</span>
+                    <button 
+                      type="button" 
+                      onClick={generateAIWish}
+                      disabled={!form.name || isGeneratingWish}
+                      style={{
+                        background: "transparent", border: "none", color: AMBER, 
+                        fontSize: 10, cursor: form.name ? "pointer" : "default", 
+                        opacity: form.name ? 1 : 0.3, display: "flex", alignItems: "center", gap: 4
+                      }}
+                    >
+                      {isGeneratingWish ? "Writing..." : "✨ AI Help"}
+                    </button>
+                  </div>
                   <textarea 
                     value={form.message}
                     onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                    placeholder="Wishes for the couple..."
+                    placeholder={form.name ? "Write something or use AI help..." : "Please enter your name first for AI help..."}
                     style={{ ...inputStyle, minHeight: 100, resize: "none", padding: "14px 18px" }}
                     onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
                     onBlur ={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
