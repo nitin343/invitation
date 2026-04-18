@@ -1,79 +1,8 @@
-﻿import { useEffect, useRef, useState, Suspense } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Clouds, Cloud } from "@react-three/drei";
-import * as THREE from "three";
 
 const SERIF = `"Playfair Display", ui-serif, Georgia, serif`;
 const SANS  = "Inter, ui-sans-serif, system-ui, sans-serif";
-
-// ─── 3D Cloud Scene ────────────────────────────────────────────────────────────
-function CloudScene({ phase }: { phase: string }) {
-  const c1 = useRef<THREE.Group>(null);
-  const c2 = useRef<THREE.Group>(null);
-  const c3 = useRef<THREE.Group>(null);
-  const ambRef  = useRef<THREE.AmbientLight>(null);
-
-  const phaseRef = useRef(phase);
-  useEffect(() => { phaseRef.current = phase; }, [phase]);
-
-  useFrame((_, delta) => {
-    const p    = phaseRef.current;
-    const lerp = 1 - Math.pow(0.012, delta);
-    const t    = Date.now();
-
-    // Clouds start off-screen (left / right / above), gather into upper sky
-    const targetC1: [number,number,number] = p === "clouds" ? [-22, 4, -1] : [-5, 4.5, -1];
-    const targetC2: [number,number,number] = p === "clouds" ? [22,  4, -1] : [ 5, 4.5, -1];
-    const targetC3: [number,number,number] = p === "clouds" ? [0,  22, -1] : [ 0, 5.5, -2];
-
-    if (c1.current) {
-      c1.current.position.x += (targetC1[0] - c1.current.position.x) * lerp;
-      c1.current.position.y += (targetC1[1] - c1.current.position.y) * lerp
-        + Math.sin(t * 0.0008) * 0.003;
-      c1.current.position.z += (targetC1[2] - c1.current.position.z) * lerp;
-    }
-    if (c2.current) {
-      c2.current.position.x += (targetC2[0] - c2.current.position.x) * lerp;
-      c2.current.position.y += (targetC2[1] - c2.current.position.y) * lerp
-        + Math.sin(t * 0.0009 + 1) * 0.003;
-      c2.current.position.z += (targetC2[2] - c2.current.position.z) * lerp;
-    }
-    if (c3.current) {
-      c3.current.position.x += (targetC3[0] - c3.current.position.x) * lerp;
-      c3.current.position.y += (targetC3[1] - c3.current.position.y) * lerp
-        + Math.sin(t * 0.0007 + 2) * 0.003;
-      c3.current.position.z += (targetC3[2] - c3.current.position.z) * lerp;
-    }
-
-    if (ambRef.current) {
-      // Keep lighting neutral/white — no warm yellow shift
-      ambRef.current.intensity += (1.2 - ambRef.current.intensity) * 0.03;
-    }
-  });
-
-  return (
-    <>
-      <ambientLight ref={ambRef} intensity={1.2} color="#ffffff" />
-      <directionalLight position={[0, 5, 8]} intensity={1.4} color="#e8f0ff" />
-
-      <Clouds>
-        {/* c1 starts far left, gathers upper-left */}
-        <group ref={c1} position={[-22, 4, -1]}>
-          <Cloud opacity={0.85} speed={0.20} bounds={[12, 2.5, 2]} volume={8} segments={28} color="#ffffff" />
-        </group>
-        {/* c2 starts far right, gathers upper-right */}
-        <group ref={c2} position={[22, 4, -1]}>
-          <Cloud opacity={0.80} speed={0.16} bounds={[11, 2.5, 2]} volume={7} segments={26} color="#eef4ff" />
-        </group>
-        {/* c3 starts above, descends to top-center */}
-        <group ref={c3} position={[0, 22, -2]}>
-          <Cloud opacity={0.75} speed={0.14} bounds={[14, 2.5, 2]} volume={9} segments={30} color="#f4f8ff" />
-        </group>
-      </Clouds>
-    </>
-  );
-}
 
 // ─── Main GateScreen ───────────────────────────────────────────────────────────
 interface Props { onComplete: () => void; onSkip?: () => void; }
@@ -116,21 +45,6 @@ export default function GateScreen({ onComplete, onSkip }: Props) {
         }}
       />
 
-
-
-      {/* 3D Cloud Canvas — sits in upper ~60% of screen */}
-      <div style={{ position:"absolute", inset:0, zIndex:2 }}>
-        <Canvas
-          camera={{ position:[0, 3, 14], fov:60 }}
-          gl={{ antialias:true, alpha:true }}
-          style={{ background:"transparent" }}
-        >
-          <Suspense fallback={null}>
-            <CloudScene phase={phase} />
-          </Suspense>
-        </Canvas>
-      </div>
-
       {/* Golden aura */}
       <motion.div
         initial={{ opacity:0, scale:0.4 }}
@@ -164,7 +78,7 @@ export default function GateScreen({ onComplete, onSkip }: Props) {
         }}
       >
         <img
-          src="/assets/ganesh.png"
+          src="/assets/ganesh-opt.png"
           alt=""
           style={{
             width:"min(68vw,400px)", objectFit:"contain", display:"block",

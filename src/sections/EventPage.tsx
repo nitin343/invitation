@@ -122,7 +122,7 @@ export default function EventPage() {
     >
       {/* HERO */}
       <SnapSection bg={INK}>
-        <ParallaxBg src="/assets/couple-photo-1.png" scrollRef={scrollRef} />
+        <ParallaxBg src="/assets/couple-photo-1-opt.jpg" scrollRef={scrollRef} />
         <div style={{ position: "absolute", inset: 0, zIndex: 1,
           background: "linear-gradient(to bottom,rgba(5,10,24,0.50) 0%,rgba(5,10,24,0.05) 35%,rgba(5,10,24,0.15) 55%,rgba(5,10,24,0.94) 100%)" }} />
         <motion.div
