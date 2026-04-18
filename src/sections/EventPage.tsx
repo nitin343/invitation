@@ -508,13 +508,16 @@ export default function EventPage() {
                       <div style={{ display: "flex", gap: 16, flexDirection: isMobile ? "column" : "row" }}>
                         <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
                           <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Total Guests</span>
-                          <select 
+                          <input 
+                            type="number"
+                            min={1}
                             value={form.guests}
-                            onChange={e => setForm(f => ({ ...f, guests: parseInt(e.target.value) }))}
-                            style={{ ...inputStyle, appearance: "none", cursor: "pointer" }}
-                          >
-                            {[1,2,3,4,5,6].map(n => <option key={n} value={n} style={{ background: "#050a18", color: "#fff" }}>{n} {n === 1 ? "Guest" : "Guests"}</option>)}
-                          </select>
+                            onChange={e => setForm(f => ({ ...f, guests: parseInt(e.target.value) || 1 }))}
+                            style={inputStyle}
+                            placeholder="Number of guests"
+                            onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
+                            onBlur ={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
+                          />
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
                           <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Meal Preference</span>
