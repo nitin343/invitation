@@ -1,4 +1,4 @@
-﻿// ╔══════════════════════════════════════════════════════════════════════════╗
+// ╔══════════════════════════════════════════════════════════════════════════╗
 // ║  CINEMATIC SECTION — LOCKED. DO NOT MODIFY TIMELINE OR ANIMATIONS.      ║
 // ║  Timeline, p-values, durations and all motion transforms are final.      ║
 // ╚══════════════════════════════════════════════════════════════════════════╝
@@ -207,7 +207,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
   // Slow blur clear over 4s for maximum suspense, scale drifts for 5s
   const heroOpacity = useTransform(p, [0.560, 0.693], [0, 1]);
   const heroScale   = useTransform(p, [0.560, 0.727], [1.08, 1.0]);
-  const heroBlurPx  = useTransform(p, [0.560, 0.710], [24, 0]);
+  const heroBlurPx  = useTransform(p, [0.560, 0.710], [32, 20]);
   const heroFilter  = useMotionTemplate`blur(${heroBlurPx}px) contrast(1.08) brightness(0.97) saturate(1.12) hue-rotate(-4deg)`;
   const revealSpikeOp = useTransform(p, [0.560, 0.577, 0.620], [0, 0.45, 0]);
   const gradeOp       = useTransform(p, [0.560, 0.727], [0, 1]);
@@ -396,8 +396,9 @@ export default function CinematicLoveSection({ onComplete }: Props) {
         <div
           className="cinema-open"
           aria-label="Cinematic introduction"
-          style={{ position:"fixed", inset:0, background:"#050a18", overflow:"hidden" }}
+          style={{ position:"fixed", inset:0, background:"linear-gradient(to bottom,#0a0510 0%,#1a0a2e 35%,#2d1040 60%,#1a0820 100%)", overflow:"hidden" }}
         >
+          <div style={{ position:"absolute", inset:0, zIndex:0, pointerEvents:"none", background:"radial-gradient(ellipse 80% 60% at 50% 55%, rgba(180,100,255,0.10) 0%, transparent 70%)" }} />
           {sharedLayers}
 
           {/* z:11  Mobile text — flex centered, scale zoom-settle, vw fonts */}
@@ -593,8 +594,8 @@ export default function CinematicLoveSection({ onComplete }: Props) {
       <div
         className="cinema-open"
         aria-label="Cinematic introduction"
-        style={{ position:"fixed", inset:0, background:"#050a18", overflow:"hidden" }}
-      >
+          style={{ position:"fixed", inset:0, background:"linear-gradient(to bottom,#0a0510 0%,#1a0a2e 35%,#2d1040 60%,#1a0820 100%)", overflow:"hidden" }}>
+        <div style={{ position:"absolute", inset:0, zIndex:0, pointerEvents:"none", background:"radial-gradient(ellipse 80% 60% at 50% 55%, rgba(180,100,255,0.10) 0%, transparent 70%)" }} />
         {sharedLayers}
 
         {/* z:11  Desktop text stage */}

@@ -133,7 +133,7 @@ export default function EventPage() {
         <ParallaxBg 
           src="/assets/couple-photo-1-opt.jpg" 
           scrollRef={scrollRef} 
-          filter="blur(14px) brightness(0.65) saturate(0.8) contrast(1.05)"
+          filter="blur(26px) brightness(0.62) saturate(0.75) contrast(1.1)"
         />
         <div style={{ position: "absolute", inset: 0, zIndex: 1,
           background: "radial-gradient(circle at center, rgba(5,10,24,0.3) 0%, rgba(5,10,24,0.85) 100%), linear-gradient(to bottom,rgba(5,10,24,0.40) 0%,rgba(5,10,24,0.05) 35%,rgba(5,10,24,0.15) 55%,rgba(5,10,24,0.96) 100%)" }} />
