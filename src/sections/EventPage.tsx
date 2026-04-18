@@ -1,4 +1,4 @@
-﻿import { useState, useLayoutEffect, useRef } from "react";
+import { useState, useLayoutEffect, useRef } from "react";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 
 const SERIF = '"Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif';
@@ -49,8 +49,8 @@ function SnapSection({ children, bg = INK, style }: {
   );
 }
 
-function ParallaxBg({ src, scrollRef }: {
-  src: string; scrollRef: React.RefObject<HTMLDivElement | null>;
+function ParallaxBg({ src, scrollRef, filter }: {
+  src: string; scrollRef: React.RefObject<HTMLDivElement | null>; filter?: string;
 }) {
   const { scrollYProgress } = useScroll({
     container: scrollRef, offset: ["start start", "end start"],
@@ -62,6 +62,7 @@ function ParallaxBg({ src, scrollRef }: {
       width: "100%", height: "124%",
       objectFit: "cover", objectPosition: "center 20%",
       y, zIndex: 0,
+      filter,
     }} />
   );
 }
@@ -85,10 +86,17 @@ export default function EventPage() {
   const [submitted, setSubmitted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const [isMobile, setIsMobile] = useState(false);
+
   useLayoutEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     return () => {
+      window.removeEventListener("resize", checkMobile);
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     };
@@ -97,9 +105,9 @@ export default function EventPage() {
   // Celebrations — cinematic identity cards (mood + date only)
   const events = [
     { num: "01", label: "Haldi",           sub: "A turmeric blessing ceremony",      date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)",  glow: "rgba(251,191,36,0.12)",  img: "/assets/haldi.jfif",            imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined },
-    { num: "02", label: "Reception",       sub: "An evening of light & celebration",  date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif",        imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined },
-    { num: "03", label: "The Wedding",     sub: "Sacred vows & eternal union",        date: "26 April", day: "Sunday",   accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif",          imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined },
-    { num: "04", label: "Bidar Reception", sub: "Celebrating with family in Bidar",  date: "28 April", day: "Tuesday",  accent: "rgba(251,191,36,0.55)",  glow: "rgba(251,191,36,0.10)",  img: "/assets/bidar-reception.jfif",  imgH: "clamp(170px,28vh,240px)", imgPos: "bottom", titleTop: true,  cardPad: "3px" },
+    { num: "02", label: "Reception",       sub: "An evening of light & celebration",  date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif",        imgH: "clamp(170px,28vh,240px)", imgPos: "top",    titleTop: false, cardPad: undefined },
+    { num: "03", label: "The Wedding",     sub: "Sacred vows & eternal union",        date: "26 April", day: "Sunday",   accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif",          imgH: "clamp(170px,28vh,240px)", imgPos: "top",    titleTop: false, cardPad: undefined },
+    { num: "04", label: "Bidar Reception", sub: "Celebrating with family in Bidar",  date: "28 April", day: "Tuesday",  accent: "rgba(251,191,36,0.55)",  glow: "rgba(251,191,36,0.10)",  img: "/assets/bidar-reception.jfif",  imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true,  cardPad: "3px" },
   ];
 
   // Schedule — practical logistics: where, when, dress
@@ -122,9 +130,13 @@ export default function EventPage() {
     >
       {/* HERO */}
       <SnapSection bg={INK}>
-        <ParallaxBg src="/assets/couple-photo-1-opt.jpg" scrollRef={scrollRef} />
+        <ParallaxBg 
+          src="/assets/couple-photo-1-opt.jpg" 
+          scrollRef={scrollRef} 
+          filter="blur(14px) brightness(0.65) saturate(0.8) contrast(1.05)"
+        />
         <div style={{ position: "absolute", inset: 0, zIndex: 1,
-          background: "linear-gradient(to bottom,rgba(5,10,24,0.50) 0%,rgba(5,10,24,0.05) 35%,rgba(5,10,24,0.15) 55%,rgba(5,10,24,0.94) 100%)" }} />
+          background: "radial-gradient(circle at center, rgba(5,10,24,0.3) 0%, rgba(5,10,24,0.85) 100%), linear-gradient(to bottom,rgba(5,10,24,0.40) 0%,rgba(5,10,24,0.05) 35%,rgba(5,10,24,0.15) 55%,rgba(5,10,24,0.96) 100%)" }} />
         <motion.div
           variants={staggerParent} initial="hidden" animate="show"
           style={{
@@ -205,9 +217,9 @@ export default function EventPage() {
           variants={staggerParent} initial="hidden" whileInView="show"
           viewport={{ root: scrollRef, amount: 0.25, once: true }}
           style={{
-            position: "relative", zIndex: 1, width: "100%", maxWidth: 860,
+            position: "relative", zIndex: 1, width: "100%", maxWidth: isMobile ? 860 : 1200,
             height: "100svh",
-            padding: "clamp(16px,3vh,32px) clamp(16px,4vw,32px)",
+            padding: isMobile ? "clamp(16px,3vh,32px) clamp(16px,4vw,32px)" : "clamp(24px,4vh,48px) clamp(24px,4vw,48px)",
             boxSizing: "border-box",
             display: "flex", flexDirection: "column",
           }}
@@ -218,106 +230,129 @@ export default function EventPage() {
 
           {/* 2×2 cinematic cards — name + mood + date only, fills remaining height */}
           <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gridTemplateRows: "repeat(2, 1fr)",
-            gap: "clamp(8px,1.5vw,14px)",
+            display: isMobile ? "flex" : "grid",
+            gridTemplateColumns: isMobile ? undefined : "repeat(2, 1fr)",
+            gridTemplateRows: isMobile ? undefined : "repeat(2, 1fr)",
+            flexDirection: isMobile ? "row" : undefined,
+            overflowX: isMobile ? "auto" : "visible",
+            scrollSnapType: isMobile ? "x mandatory" : "none",
+            gap: isMobile ? "20px" : "clamp(16px,2vw,24px)",
+            padding: isMobile ? "10px 20px 30px" : "0",
+            margin: isMobile ? "0 -20px" : "0",
             flex: 1,
             minHeight: 0,
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            WebkitOverflowScrolling: "touch",
           }}>
             {events.map(({ num, label, sub, date, day, accent, glow, img, imgH, imgPos, titleTop, cardPad }) => (
               <motion.div key={label} variants={fadeSlide}
-                whileHover={{ scale: 1.02, boxShadow: "0 20px 60px rgba(0,0,0,0.6)" }}
+                whileHover={isMobile ? undefined : { scale: 1.015, boxShadow: "0 20px 60px rgba(0,0,0,0.6)" }}
                 style={{
                   position: "relative",
                   background: "linear-gradient(145deg,rgba(8,16,40,0.95) 0%,rgba(4,8,22,0.98) 100%)",
-                  border: `1px solid ${accent.replace(/[\d.]+\)$/, "0.28)")}`,
-                  borderRadius: 10,
-                  padding: `${cardPad ?? "clamp(16px,2.5vw,24px)"} clamp(16px,2.5vw,24px)`,
-                  paddingTop: cardPad ?? "clamp(18px,3vh,28px)",
+                  border: `1px solid ${accent.replace(/[\d.]+\)$/, "0.22)")}`,
+                  borderRadius: 16,
+                  padding: isMobile ? "24px" : "18px",
                   backdropFilter: "blur(14px)",
-                  transition: "transform 0.35s,box-shadow 0.35s",
+                  transition: "transform 0.4s,box-shadow 0.4s",
                   overflow: "hidden",
-                  display: "flex", flexDirection: "column",
+                  display: "flex", 
+                  flexDirection: isMobile ? "column" : "row",
+                  alignItems: "stretch",
+                  flex: isMobile ? "0 0 82vw" : "1",
+                  minHeight: isMobile ? undefined : "clamp(180px, 32vh, 260px)",
+                  scrollSnapAlign: isMobile ? "center" : "none",
+                  boxShadow: isMobile ? "0 10px 30px rgba(0,0,0,0.4)" : "none",
+                  gap: isMobile ? 0 : 22,
                 }}
               >
                 {/* ambient glow */}
-                <div style={{ position: "absolute", inset: 0, background: glow, pointerEvents: "none", borderRadius: 10 }} />
+                <div style={{ position: "absolute", inset: 0, background: glow, pointerEvents: "none", borderRadius: 16 }} />
 
-                {/* top row: number + name */}
-                <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "baseline", gap: 8, marginBottom: "clamp(10px,1.8vh,16px)" }}>
-                  <span style={{
-                    fontFamily: SANS, fontSize: "clamp(8px,1.4vw,9px)",
-                    letterSpacing: "3px", color: accent.replace(/[\d.]+\)$/, "0.55)"),
-                    textTransform: "uppercase" as const, flexShrink: 0,
-                  }}>{num}</span>
-                  <span style={{
-                    fontFamily: SERIF, fontStyle: "italic",
-                    fontSize: "clamp(20px,4.2vw,28px)",
-                    color: "#fff8ef", lineHeight: 1.1,
-                  }}>{label}</span>
-                </div>
-
-                {/* center image — vertically centered in remaining space */}
+                {/* center image */}
                 <div style={{
                   position: "relative", zIndex: 1,
-                  height: imgH,
-                  flexShrink: 0,
-                  borderRadius: 7, overflow: "hidden",
-                  border: `1px solid ${accent.replace(/[\d.]+\)$/, "0.18)")}`,
-                  margin: titleTop ? undefined : "auto 0",
+                  flex: isMobile ? "none" : "0 0 44%",
+                  height: isMobile ? "280px" : "auto",
+                  minHeight: isMobile ? undefined : "160px",
+                  borderRadius: 12, overflow: "hidden",
+                  border: `1px solid ${accent.replace(/[\d.]+\)$/, "0.14)")}`,
                 }}>
                   <img src={img} alt={label} style={{
                     width: "100%", height: "100%",
                     objectFit: "cover", objectPosition: imgPos,
                     display: "block",
-                    filter: "brightness(0.82) saturate(1.2) contrast(1.05)",
+                    filter: "brightness(0.85) saturate(1.1) contrast(1.05)",
                   }} />
                   <div style={{
                     position: "absolute", inset: 0,
-                    background: `linear-gradient(to top, ${accent.replace(/[\d.]+\)$/, "0.55)")} 0%, transparent 55%)`,
-                  }} />
-                  <div style={{
-                    position: "absolute", inset: 0,
-                    background: "linear-gradient(115deg, rgba(255,255,255,0.0) 25%, rgba(255,255,255,0.18) 45%, rgba(255,255,255,0.06) 55%, rgba(255,255,255,0.0) 70%)",
-                    pointerEvents: "none",
-                  }} />
-                  <div style={{
-                    position: "absolute", top: 0, left: 0,
-                    width: "40%", height: "35%",
-                    background: "radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.12) 0%, transparent 70%)",
-                    pointerEvents: "none",
+                    background: `linear-gradient(to top, ${accent.replace(/[\d.]+\)$/, "0.45)")} 0%, transparent 60%)`,
                   }} />
                 </div>
 
-                {/* subtitle — hidden if empty */}
-                {sub && <div style={{
-                  position: "relative", zIndex: 1,
-                  fontFamily: SANS, fontSize: "clamp(11px,1.9vw,14px)",
-                  color: "rgba(232,223,208,0.80)", fontStyle: "italic",
-                  lineHeight: 1.45,
-                  marginTop: "clamp(10px,1.8vh,16px)",
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical" as const,
-                  overflow: "hidden",
-                }}>{sub}</div>}
-
-                {/* date pill — bottom */}
+                {/* content column */}
                 <div style={{
                   position: "relative", zIndex: 1,
-                  display: "inline-flex", alignItems: "center", gap: 6, alignSelf: "flex-start",
-                  marginTop: "clamp(8px,1.4vh,12px)",
-                  padding: "5px 14px", borderRadius: 50,
-                  border: `1px solid ${accent.replace(/[\d.]+\)$/, "0.42)")}`,
-                  background: accent.replace(/[\d.]+\)$/, "0.14)"),
+                  flex: 1, display: "flex", flexDirection: "column",
+                  justifyContent: "center",
+                  padding: isMobile ? "20px 0 0" : "4px 0",
                 }}>
-                  <span style={{ fontFamily: SERIF, fontSize: "clamp(12px,2.2vw,15px)", color: accent.replace(/[\d.]+\)$/, "0.95)"), fontWeight: 600 }}>{date}</span>
-                  <span style={{ fontFamily: SANS, fontSize: "clamp(8px,1.4vw,10px)", letterSpacing: "2px", color: accent.replace(/[\d.]+\)$/, "0.65)"), textTransform: "uppercase" as const }}>{day}</span>
+                  {/* top row: number + name */}
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: isMobile ? "14px" : "10px" }}>
+                    <span style={{
+                      fontFamily: SANS, fontSize: isMobile ? "10px" : "clamp(8px,1.2vw,9px)",
+                      letterSpacing: "4px", color: accent.replace(/[\d.]+\)$/, "0.55)"),
+                      textTransform: "uppercase" as const, flexShrink: 0,
+                    }}>{num}</span>
+                    <span style={{
+                      fontFamily: SERIF, fontStyle: "italic",
+                      fontSize: isMobile ? "32px" : "clamp(22px,3vw,28px)",
+                      color: "#fff8ef", lineHeight: 1.1,
+                    }}>{label}</span>
+                  </div>
+
+                  {/* subtitle */}
+                  {sub && <div style={{
+                    fontFamily: SANS, fontSize: isMobile ? "14px" : "clamp(11px,1.4vw,13px)",
+                    color: "rgba(232,223,208,0.75)", fontStyle: "italic",
+                    lineHeight: 1.5,
+                    marginBottom: isMobile ? "18px" : "14px",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical" as const,
+                    overflow: "hidden",
+                  }}>{sub}</div>}
+
+                  {/* date pill — bottom */}
+                  <div style={{
+                    display: "inline-flex", alignItems: "center", gap: 8, alignSelf: "flex-start",
+                    padding: "6px 16px", borderRadius: 50,
+                    border: `1px solid ${accent.replace(/[\d.]+\)$/, "0.40)")}`,
+                    background: accent.replace(/[\d.]+\)$/, "0.15)"),
+                  }}>
+                    <span style={{ fontFamily: SERIF, fontSize: isMobile ? "16px" : "clamp(13px,1.8vw,15px)", color: accent.replace(/[\d.]+\)$/, "0.95)"), fontWeight: 600 }}>{date}</span>
+                    <span style={{ fontFamily: SANS, fontSize: isMobile ? "9px" : "clamp(8px,1.2vw,10px)", letterSpacing: "2px", color: accent.replace(/[\d.]+\)$/, "0.75)"), textTransform: "uppercase" as const }}>{day}</span>
+                  </div>
                 </div>
               </motion.div>
             ))}
           </div>
+
+          {/* scroll indicator for mobile */}
+          {isMobile && (
+            <motion.div variants={fadeIn} style={{
+              display: "flex", justifyContent: "center", gap: 8, marginTop: 12, marginBottom: 10
+            }}>
+              {events.map((_, i) => (
+                <div key={i} style={{
+                  width: 6, height: 6, borderRadius: "50%",
+                  background: i === 0 ? AMBER : "rgba(255,255,255,0.2)",
+                  transition: "all 0.3s"
+                }} />
+              ))}
+            </motion.div>
+          )}
         </motion.div>
       </SnapSection>
 

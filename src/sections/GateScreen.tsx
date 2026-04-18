@@ -8,14 +8,13 @@ const SANS  = "Inter, ui-sans-serif, system-ui, sans-serif";
 interface Props { onComplete: () => void; onSkip?: () => void; }
 
 export default function GateScreen({ onComplete, onSkip }: Props) {
-  const [phase, setPhase] = useState<"clouds"|"sun"|"ganesh"|"text">("clouds");
+  const [phase, setPhase] = useState<"start"|"ganesh"|"text">("start");
   const done = useRef(false);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("sun"),    1400);
-    const t2 = setTimeout(() => setPhase("ganesh"), 2600);
-    const t3 = setTimeout(() => setPhase("text"),   5800);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    const t1 = setTimeout(() => setPhase("ganesh"), 600);
+    const t2 = setTimeout(() => setPhase("text"),   3200);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   const finish = () => {
@@ -30,20 +29,22 @@ export default function GateScreen({ onComplete, onSkip }: Props) {
     (onSkip ?? onComplete)();
   };
 
-  const atSun    = phase === "sun" || phase === "ganesh" || phase === "text";
   const atGanesh = phase === "ganesh" || phase === "text";
   const atText   = phase === "text";
 
   return (
     <div style={{ position:"fixed", inset:0, zIndex:9000, overflow:"hidden", userSelect:"none" }}>
 
-      {/* Sky — pure daylight blue-white, no yellow */}
-      <div
-        style={{
-          position:"absolute", inset:0, zIndex:0,
-          background:"linear-gradient(to bottom,#6ab0d8 0%,#9fcde8 25%,#c8e5f5 55%,#e8f4fb 80%,#f5faff 100%)",
-        }}
-      />
+      {/* Background — deep twilight, matches app dark theme */}
+      <div style={{
+        position:"absolute", inset:0, zIndex:0,
+        background:"linear-gradient(to bottom,#0a0510 0%,#1a0a2e 35%,#2d1040 60%,#1a0820 100%)",
+      }} />
+      {/* Soft centre glow */}
+      <div style={{
+        position:"absolute", inset:0, zIndex:1, pointerEvents:"none",
+        background:"radial-gradient(ellipse 80% 60% at 50% 55%, rgba(180,100,255,0.10) 0%, transparent 70%)",
+      }} />
 
       {/* Golden aura */}
       <motion.div
@@ -112,8 +113,8 @@ export default function GateScreen({ onComplete, onSkip }: Props) {
               style={{
                 fontFamily:SERIF, fontStyle:"italic",
                 fontSize:"clamp(26px,6.5vw,58px)",
-                color:"#2a1800",
-                textShadow:"0 2px 16px rgba(0,0,0,.18),0 1px 4px rgba(0,0,0,.12)",
+                color:"#fff8ef",
+                textShadow:"0 2px 24px rgba(255,180,0,.35),0 1px 4px rgba(0,0,0,.5)",
                 letterSpacing:"2px", lineHeight:1.18, marginBottom:8,
               }}
             >
@@ -127,7 +128,7 @@ export default function GateScreen({ onComplete, onSkip }: Props) {
               style={{
                 fontFamily:SANS, fontSize:"clamp(9px,2vw,11px)",
                 letterSpacing:"6px", textTransform:"uppercase",
-                color:"rgba(60,20,0,.80)",
+                color:"rgba(255,220,160,.75)",
                 textShadow:"none",
                 marginBottom:5,
               }}
@@ -142,7 +143,7 @@ export default function GateScreen({ onComplete, onSkip }: Props) {
               style={{
                 fontFamily:SANS, fontSize:"clamp(9px,2vw,11px)",
                 letterSpacing:"5px", textTransform:"uppercase",
-                color:"rgba(80,40,0,.70)",
+                color:"rgba(255,200,120,.60)",
                 textShadow:"none",
                 marginBottom:32,
               }}
@@ -159,7 +160,7 @@ export default function GateScreen({ onComplete, onSkip }: Props) {
               style={{
                 fontFamily:SERIF, fontStyle:"italic",
                 fontSize:"clamp(14px,3vw,18px)",
-                color:"#3a1200",
+                color:"#1a0800",
                 background:"linear-gradient(135deg,#ffd700 0%,#ffb300 50%,#ffe066 100%)",
                 border:"none", borderRadius:50,
                 padding:"14px 44px",
@@ -179,9 +180,9 @@ export default function GateScreen({ onComplete, onSkip }: Props) {
               onClick={skip}
               style={{
                 fontFamily:SANS, fontSize:"clamp(10px,2vw,12px)",
-                color:"rgba(60,30,0,.65)",
+                color:"rgba(255,220,160,.55)",
                 background:"transparent",
-                border:"1px solid rgba(80,50,0,.25)",
+                border:"1px solid rgba(255,200,120,.25)",
                 borderRadius:50, padding:"8px 28px",
                 letterSpacing:"3px", textTransform:"uppercase", cursor:"pointer",
               }}
