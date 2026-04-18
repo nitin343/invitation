@@ -1,0 +1,174 @@
+﻿:root {
+  color-scheme: dark;
+
+  /* Legacy */
+  --bg: #050a18;
+  --gold: rgba(212, 175, 55, 0.15);
+  --peach: rgba(255, 220, 180, 0.2);
+
+  /* Ink & Starlight palette */
+  --ink-base:    #050a18;
+  --ink-mid:     #0d1b3e;
+  --aurora-v:    rgba(147, 51, 234, 0.22);
+  --aurora-r:    rgba(236, 72, 153, 0.17);
+  --aurora-m:    rgba(167, 243, 208, 0.12);
+  --text-parch:  #e8dfd0;
+  --amber-flame: rgba(255, 183, 77, 0.9);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* height: 100% is intentionally NOT set here.
+   Setting height: 100% on html/body caps the document to exactly one viewport
+   height, which prevents vertical scrolling and kills the scroll-driven
+   animation entirely. */
+html {
+  scroll-behavior: auto; /* Framer Motion owns all timing; no browser smoothing */
+}
+
+body {
+  min-height: 100vh;      /* grow to fit content, never shrink below viewport */
+  background: var(--bg);
+  color: #fff;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scrollbar-width: none;       /* Firefox: hide scrollbar */
+  -ms-overflow-style: none;    /* IE/Edge */
+}
+
+body::-webkit-scrollbar {
+  display: none;               /* Chrome / Safari */
+}
+
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ── Film grain ─────────────────────────────────────────────────────────────
+   Classic CSS Design Awards technique: an oversized SVG noise tile that
+   jitters each frame via steps(), giving analogue 35mm grain on any surface.  */
+@keyframes grain {
+  0%          { transform: translate(0%,   0%)   }
+  10%         { transform: translate(-2%,  -5%)  }
+  20%         { transform: translate(-6%,   2%)  }
+  30%         { transform: translate(3%,   -4%)  }
+  40%         { transform: translate(-4%,   6%)  }
+  50%         { transform: translate(-7%,  -2%)  }
+  60%         { transform: translate(6%,    1%)  }
+  70%         { transform: translate(-3%,   5%)  }
+  80%         { transform: translate(2%,   -6%)  }
+  90%         { transform: translate(-5%,   2%)  }
+  100%        { transform: translate(0%,    0%)  }
+}
+
+.film-grain {
+  position: absolute;
+  inset: -30%;
+  width: 160%;
+  height: 160%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  opacity: 0.055;
+  animation: grain 0.35s steps(10) infinite;
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: overlay;
+}
+
+/* ── Atmosphere pulse (landing glow breathes like candle-light) ─────────── */
+@keyframes atmosphere-pulse {
+  0%, 100% { opacity: 1;    transform: scale(1);    }
+  45%      { opacity: 0.82; transform: scale(1.06); }
+}
+
+.atmosphere-pulse {
+  animation: atmosphere-pulse 7s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* ── Initial flash-in: the cinema screen lights up on first load ─────────── */
+@keyframes cinema-open {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.cinema-open {
+  animation: cinema-open 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Aurora bands (slow hue drift on the midnight blue field) ───────────── */
+@keyframes aurora {
+  0%   { filter: hue-rotate(0deg)   brightness(1);    }
+  40%  { filter: hue-rotate(18deg)  brightness(1.06); }
+  70%  { filter: hue-rotate(-12deg) brightness(0.96); }
+  100% { filter: hue-rotate(0deg)   brightness(1);    }
+}
+
+/* ── Star field particle ────────────────────────────────────────────────── */
+@keyframes star-twinkle {
+  0%, 100% { opacity: 1;   transform: scale(1);   }
+  50%      { opacity: 0.2; transform: scale(0.75); }
+}
+
+.star-particle {
+  animation: star-twinkle 4s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+/* ── Chromatic aberration on names reveal ───────────────────────────────── */
+@keyframes chromatic-snap {
+  0%   {
+    text-shadow:
+      -4px 0 rgba(147, 51, 234, 0.85),
+       4px 0 rgba(236, 72, 153, 0.85);
+    filter: blur(1.5px);
+  }
+  55%  {
+    text-shadow:
+      -1px 0 rgba(147, 51, 234, 0.40),
+       1px 0 rgba(236, 72, 153, 0.40);
+    filter: blur(0.4px);
+  }
+  100% {
+    text-shadow: none;
+    filter: none;
+  }
+}
+
+.names-chromatic {
+  animation: chromatic-snap 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.15s;
+}
+
+/* ── Micro-shake on couple reveal ───────────────────────────────────────── */
+@keyframes cinema-shake {
+  0%   { transform: translate(0,    0)    rotate(0deg);   }
+  15%  { transform: translate(-3px, 2px)  rotate(-0.4deg);}
+  30%  { transform: translate(3px,  -2px) rotate(0.4deg); }
+  45%  { transform: translate(-2px, 1px)  rotate(-0.2deg);}
+  60%  { transform: translate(2px,  -1px) rotate(0.2deg); }
+  75%  { transform: translate(-1px, 0px)  rotate(0deg);   }
+  100% { transform: translate(0,    0)    rotate(0deg);   }
+}
+
+.cinema-shake {
+  animation: cinema-shake 0.38s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* ── Petal rain for gate screen ── */
+@keyframes petalFall {
+  0%   { transform: translateY(-40px)  translateX(0px)   rotate(0deg)   scaleX(1);   opacity: 0;   }
+  8%   { opacity: 0.75; }
+  50%  { transform: translateY(50vh)   translateX(var(--drift, 30px))  rotate(180deg) scaleX(0.85); opacity: 0.6; }
+  92%  { opacity: 0.4; }
+  100% { transform: translateY(110vh)  translateX(calc(var(--drift, 30px) * 1.4)) rotate(360deg) scaleX(1); opacity: 0; }
+}
