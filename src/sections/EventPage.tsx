@@ -114,18 +114,18 @@ export default function EventPage() {
 
   // Celebrations — cinematic identity cards (mood + date only)
   const events = [
-    { num: "01", label: "Haldi",           sub: "A turmeric blessing ceremony",      date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)",  glow: "rgba(251,191,36,0.12)",  img: "/assets/haldi.jfif",            imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined },
-    { num: "02", label: "Reception",       sub: "An evening of light & celebration",  date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif",        imgH: "clamp(170px,28vh,240px)", imgPos: "top",    titleTop: false, cardPad: undefined },
-    { num: "03", label: "The Wedding",     sub: "Sacred vows & eternal union",        date: "26 April", day: "Sunday",   accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif",          imgH: "clamp(170px,28vh,240px)", imgPos: "top",    titleTop: false, cardPad: undefined },
-    { num: "04", label: "Bidar Reception", sub: "Celebrating with family in Bidar",  date: "28 April", day: "Tuesday",  accent: "rgba(251,191,36,0.55)",  glow: "rgba(251,191,36,0.10)",  img: "/assets/bidar-reception.jfif",  imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true,  cardPad: "3px" },
+    { num: "01", label: "Haldi",           sub: "A turmeric blessing ceremony",      date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)",  glow: "rgba(251,191,36,0.12)",  img: "/assets/haldi.jfif",            imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
+    { num: "02", label: "Reception",       sub: "An evening of light & celebration",  date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif",        imgH: "clamp(170px,28vh,240px)", imgPos: "top",    titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { num: "03", label: "The Wedding",     sub: "Sacred vows & eternal union",        date: "26 April", day: "Sunday",   accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif",          imgH: "clamp(170px,28vh,240px)", imgPos: "top",    titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { num: "04", label: "Bidar Reception", sub: "Celebrating with family in Bidar",  date: "28 April", day: "Tuesday",  accent: "rgba(251,191,36,0.55)",  glow: "rgba(251,191,36,0.10)",  img: "/assets/bidar-reception.jfif",  imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true,  cardPad: "3px", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
   ];
 
   // Schedule — practical logistics: where, when, dress
   const schedule = [
-    { date: "23 Apr", day: "Thursday", event: "Haldi Ceremony",    venue: "Bidar",               time: "Morning",  dress: "Casual traditional",   note: "Yellow & green attire welcome" },
-    { date: "25 Apr", day: "Saturday", event: "Reception Night",    venue: "GMA Kalyan Mantapa",  time: "6:00 PM",  dress: "Formal / ethnic wear",  note: "Ganj, Bidar" },
-    { date: "26 Apr", day: "Sunday",   event: "Wedding Ceremony",   venue: "GMA Kalyan Mantapa",  time: "Morning",  dress: "Traditional attire",    note: "Ganj, Bidar" },
-    { date: "28 Apr", day: "Tuesday",  event: "Reception — Bidar",  venue: "Shree Function Hall", time: "Evening",  dress: "Formal / ethnic wear",  note: "Bidar" },
+    { date: "23 Apr", day: "Thursday", event: "Haldi Ceremony",    venue: "Bidar",               time: "Morning",  dress: "Casual traditional",   note: "Yellow & green attire welcome", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
+    { date: "25 Apr", day: "Saturday", event: "Reception Night",    venue: "GMA Kalyan Mantapa",  time: "6:00 PM",  dress: "Formal / ethnic wear",  note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { date: "26 Apr", day: "Sunday",   event: "Wedding Ceremony",   venue: "GMA Kalyan Mantapa",  time: "Morning",  dress: "Traditional attire",    note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { date: "28 Apr", day: "Tuesday",  event: "Reception — Bidar",  venue: "Shree Function Hall", time: "Evening",  dress: "Formal / ethnic wear",  note: "Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
   ];
 
   return (
@@ -335,14 +335,22 @@ export default function EventPage() {
                   }}>{sub}</div>}
 
                   {/* date pill — bottom */}
-                  <div style={{
-                    display: "inline-flex", alignItems: "center", gap: 8, alignSelf: "flex-start",
-                    padding: "6px 16px", borderRadius: 50,
-                    border: `1px solid ${accent.replace(/[\d.]+\)$/, "0.40)")}`,
-                    background: accent.replace(/[\d.]+\)$/, "0.15)"),
-                  }}>
-                    <span style={{ fontFamily: SERIF, fontSize: isMobile ? "16px" : "clamp(13px,1.8vw,15px)", color: accent.replace(/[\d.]+\)$/, "0.95)"), fontWeight: 600 }}>{date}</span>
-                    <span style={{ fontFamily: SANS, fontSize: isMobile ? "9px" : "clamp(8px,1.2vw,10px)", letterSpacing: "2px", color: accent.replace(/[\d.]+\)$/, "0.75)"), textTransform: "uppercase" as const }}>{day}</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto" }}>
+                    <div style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      padding: "6px 16px", borderRadius: 50,
+                      border: `1px solid ${accent.replace(/[\d.]+\)$/, "0.40)")}`,
+                      background: accent.replace(/[\d.]+\)$/, "0.15)"),
+                    }}>
+                      <span style={{ fontFamily: SERIF, fontSize: isMobile ? "16px" : "clamp(13px,1.8vw,15px)", color: accent.replace(/[\d.]+\)$/, "0.95)"), fontWeight: 600 }}>{date}</span>
+                      <span style={{ fontFamily: SANS, fontSize: isMobile ? "9px" : "clamp(8px,1.2vw,10px)", letterSpacing: "2px", color: accent.replace(/[\d.]+\)$/, "0.75)"), textTransform: "uppercase" as const }}>{day}</span>
+                    </div>
+
+                    <a href={mapsUrl} target="_blank" rel="noopener noreferrer" style={{
+                      textDecoration: "none", color: accent.replace(/[\d.]+\)$/, "0.85)"),
+                      fontSize: 10, letterSpacing: 2, fontWeight: 600, fontFamily: SANS,
+                      padding: "4px 8px", borderBottom: `1px solid ${accent.replace(/[\d.]+\)$/, "0.30)")}`
+                    }}>VIEW MAP</a>
                   </div>
                 </div>
               </motion.div>
@@ -403,9 +411,17 @@ export default function EventPage() {
                 <div style={{ paddingTop: 2 }}>
                   <div style={{ fontFamily: SERIF, fontSize: "clamp(14px,3vw,17px)", fontWeight: 600, color: PARCHMENT, marginBottom: 8, lineHeight: 1.2 }}>{event}</div>
 
-                  <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "4px 12px" }}>
+                  <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "4px 12px", alignItems: "center" }}>
                     <span style={{ fontFamily: SANS, fontSize: "clamp(9px,1.8vw,10px)", letterSpacing: "2px", color: "rgba(167,243,208,0.55)", textTransform: "uppercase" as const }}>venue</span>
                     <span style={{ fontFamily: SANS, fontSize: "clamp(11px,2vw,12px)", color: "rgba(232,223,208,0.68)" }}>{venue}</span>
+                    <a href={mapsUrl} target="_blank" rel="noopener noreferrer" style={{
+                      display: "flex", alignItems: "center", gap: 4, textDecoration: "none",
+                      color: "rgba(255,183,77,0.85)", fontSize: 10, letterSpacing: 1, fontWeight: 500,
+                      background: "rgba(255,183,77,0.08)", padding: "2px 8px", borderRadius: 4,
+                      border: "1px solid rgba(255,183,77,0.15)"
+                    }}>
+                      <span style={{ fontSize: 12 }}>📍</span> MAP
+                    </a>
                   </div>
 
                   <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "4px 12px", marginTop: 4 }}>
