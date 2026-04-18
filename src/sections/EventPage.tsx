@@ -15,6 +15,17 @@ const Rule = () => (
   }} />
 );
 
+const pulseGlow = {
+  animate: {
+    boxShadow: [
+      "0 0 0px rgba(255,183,77,0)",
+      "0 0 12px rgba(255,183,77,0.3)",
+      "0 0 0px rgba(255,183,77,0)"
+    ],
+    transition: { duration: 2, repeat: Infinity }
+  }
+};
+
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
   <div style={{
     fontFamily: SANS, fontSize: 9, letterSpacing: "7px",
@@ -346,11 +357,23 @@ export default function EventPage() {
                       <span style={{ fontFamily: SANS, fontSize: isMobile ? "9px" : "clamp(8px,1.2vw,10px)", letterSpacing: "2px", color: accent.replace(/[\d.]+\)$/, "0.75)"), textTransform: "uppercase" as const }}>{day}</span>
                     </div>
 
-                    <a href={mapsUrl} target="_blank" rel="noopener noreferrer" style={{
-                      textDecoration: "none", color: accent.replace(/[\d.]+\)$/, "0.85)"),
-                      fontSize: 10, letterSpacing: 2, fontWeight: 600, fontFamily: SANS,
-                      padding: "4px 8px", borderBottom: `1px solid ${accent.replace(/[\d.]+\)$/, "0.30)")}`
-                    }}>VIEW MAP</a>
+                    <motion.a 
+                      href={mapsUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      whileTap={{ scale: 0.92 }}
+                      onClick={() => { if(window.navigator.vibrate) window.navigator.vibrate(10); }}
+                      style={{
+                        textDecoration: "none", color: accent.replace(/[\d.]+\)$/, "0.95)"),
+                        fontSize: 10, letterSpacing: 2, fontWeight: 700, fontFamily: SANS,
+                        padding: "6px 12px", borderRadius: 4,
+                        background: accent.replace(/[\d.]+\)$/, "0.10)"),
+                        border: `1px solid ${accent.replace(/[\d.]+\)$/, "0.30)")}`,
+                        display: "flex", alignItems: "center", gap: 6
+                      }}
+                    >
+                      <span style={{ fontSize: 12 }}>📍</span> VIEW MAP
+                    </motion.a>
                   </div>
                 </div>
               </motion.div>
@@ -414,14 +437,24 @@ export default function EventPage() {
                   <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "4px 12px", alignItems: "center" }}>
                     <span style={{ fontFamily: SANS, fontSize: "clamp(9px,1.8vw,10px)", letterSpacing: "2px", color: "rgba(167,243,208,0.55)", textTransform: "uppercase" as const }}>venue</span>
                     <span style={{ fontFamily: SANS, fontSize: "clamp(11px,2vw,12px)", color: "rgba(232,223,208,0.68)" }}>{venue}</span>
-                    <a href={mapsUrl} target="_blank" rel="noopener noreferrer" style={{
-                      display: "flex", alignItems: "center", gap: 4, textDecoration: "none",
-                      color: "rgba(255,183,77,0.85)", fontSize: 10, letterSpacing: 1, fontWeight: 500,
-                      background: "rgba(255,183,77,0.08)", padding: "2px 8px", borderRadius: 4,
-                      border: "1px solid rgba(255,183,77,0.15)"
-                    }}>
-                      <span style={{ fontSize: 12 }}>📍</span> MAP
-                    </a>
+                    <motion.a 
+                      href={mapsUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      whileTap={{ scale: 0.94 }}
+                      onClick={() => { if(window.navigator.vibrate) window.navigator.vibrate(10); }}
+                      variants={pulseGlow}
+                      animate="animate"
+                      style={{
+                        display: "flex", alignItems: "center", gap: 4, textDecoration: "none",
+                        color: "rgba(255,183,77,0.95)", fontSize: 10, letterSpacing: 1, fontWeight: 600,
+                        background: "rgba(255,183,77,0.12)", padding: "4px 10px", borderRadius: 4,
+                        border: "1px solid rgba(255,183,77,0.25)",
+                        marginLeft: 8
+                      }}
+                    >
+                      <span style={{ fontSize: 12 }}>📍</span> OPEN MAPS
+                    </motion.a>
                   </div>
 
                   <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "4px 12px", marginTop: 4 }}>
