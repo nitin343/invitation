@@ -367,7 +367,7 @@ export default function EventPage() {
                   }}>{sub}</div>}
 
                   {/* date pill — bottom */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto" }}>
+                  <div style={{ marginTop: "auto" }}>
                     <div style={{
                       display: "inline-flex", alignItems: "center", gap: 8,
                       padding: "6px 16px", borderRadius: 50,
@@ -377,24 +377,6 @@ export default function EventPage() {
                       <span style={{ fontFamily: SERIF, fontSize: isMobile ? "16px" : "clamp(13px,1.8vw,15px)", color: accent.replace(/[\d.]+\)$/, "0.95)"), fontWeight: 600 }}>{date}</span>
                       <span style={{ fontFamily: SANS, fontSize: isMobile ? "9px" : "clamp(8px,1.2vw,10px)", letterSpacing: "2px", color: accent.replace(/[\d.]+\)$/, "0.75)"), textTransform: "uppercase" as const }}>{day}</span>
                     </div>
-
-                    <motion.a 
-                      href={mapsUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      whileTap={{ scale: 0.92 }}
-                      onClick={() => { if(window.navigator.vibrate) window.navigator.vibrate(10); }}
-                      style={{
-                        textDecoration: "none", color: accent.replace(/[\d.]+\)$/, "0.95)"),
-                        fontSize: 10, letterSpacing: 2, fontWeight: 700, fontFamily: SANS,
-                        padding: "6px 12px", borderRadius: 4,
-                        background: accent.replace(/[\d.]+\)$/, "0.10)"),
-                        border: `1px solid ${accent.replace(/[\d.]+\)$/, "0.30)")}`,
-                        display: "flex", alignItems: "center", gap: 6
-                      }}
-                    >
-                      <span style={{ fontSize: 12 }}>📍</span> VIEW MAP
-                    </motion.a>
                   </div>
                 </div>
               </motion.div>
