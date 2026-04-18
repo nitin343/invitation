@@ -1,5 +1,6 @@
 import { useState, useLayoutEffect, useRef } from "react";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { useRSVP } from "../hooks/useRSVP";
 
 const SERIF = '"Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif';
 const SANS  = "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
@@ -82,8 +83,17 @@ const toggleBase: React.CSSProperties = {
 };
 
 export default function EventPage() {
-  const [form, setForm] = useState({ name: "", attending: "yes", meal: "veg" });
+  const { submitRSVP, isSubmitting } = useRSVP();
+  const [form, setForm] = useState({ 
+    name: "", 
+    phone: "", 
+    attending: "yes" as "yes"|"no", 
+    meal: "veg" as "veg"|"nonveg"|"vegan",
+    guests: 1,
+    message: ""
+  });
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [isMobile, setIsMobile] = useState(false);
@@ -439,20 +449,43 @@ export default function EventPage() {
           <AnimatePresence mode="wait">
             {!submitted ? (
               <motion.form key="form" initial={{ opacity: 1 }} exit={{ opacity: 0, y: -14, transition: { duration: 0.3 } }}
-                onSubmit={e => { e.preventDefault(); setSubmitted(true); }}
+                onSubmit={async (e) => { 
+                  e.preventDefault(); 
+                  setError(null);
+                  const res = await submitRSVP(form);
+                  if (res.success) {
+                    setSubmitted(true);
+                  } else {
+                    setError(res.error || "Something went wrong. Please try again.");
+                  }
+                }}
                 style={{ display: "flex", flexDirection: "column", gap: 20 }}
               >
-                <motion.label variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                  <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Your Name</span>
-                  <input type="text" required value={form.name}
-                    onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                    placeholder="Full name" style={inputStyle}
-                    onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
-                    onBlur ={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
-                  />
-                </motion.label>
+                {/* Row 1: Name + Phone */}
+                <div style={{ display: "flex", gap: 16, flexDirection: isMobile ? "column" : "row" }}>
+                  <motion.label variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
+                    <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Your Name</span>
+                    <input type="text" required value={form.name}
+                      onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                      placeholder="Full name" style={inputStyle}
+                      onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
+                      onBlur ={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
+                    />
+                  </motion.label>
+                  <motion.label variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
+                    <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Phone Number</span>
+                    <input type="tel" value={form.phone}
+                      onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                      placeholder="+91..." style={inputStyle}
+                      onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
+                      onBlur ={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
+                    />
+                  </motion.label>
+                </div>
+
+                {/* Row 2: Attending Status */}
                 <motion.div variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                  <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Attending</span>
+                  <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Will you be attending?</span>
                   <div style={{ display: "flex", gap: 12 }}>
                     {(["yes","no"] as const).map(v => (
                       <button key={v} type="button" onClick={() => setForm(f => ({ ...f, attending: v }))} style={{
@@ -465,33 +498,73 @@ export default function EventPage() {
                     ))}
                   </div>
                 </motion.div>
+
+                {/* Conditional Fields: Guests + Meal */}
                 <AnimatePresence>
                   {form.attending === "yes" && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-                      style={{ display: "flex", flexDirection: "column", gap: 9 }}
+                      style={{ display: "flex", flexDirection: "column", gap: 20, overflow: "hidden" }}
                     >
-                      <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Meal Preference</span>
-                      <div style={{ display: "flex", gap: 10 }}>
-                        {(["veg","nonveg","vegan"] as const).map(v => (
-                          <button key={v} type="button" onClick={() => setForm(f => ({ ...f, meal: v }))} style={{
-                            ...toggleBase, flex: 1, fontSize: 9, padding: "11px 10px",
-                            borderColor: form.meal === v ? "rgba(167,243,208,0.85)" : "rgba(255,183,77,0.14)",
-                            color:       form.meal === v ? "rgba(167,243,208,0.90)" : "rgba(232,223,208,0.38)",
-                            background:  form.meal === v ? "rgba(167,243,208,0.08)" : "transparent",
-                          }}>{v === "veg" ? "Vegetarian" : v === "nonveg" ? "Non-veg" : "Vegan"}</button>
-                        ))}
+                      <div style={{ display: "flex", gap: 16, flexDirection: isMobile ? "column" : "row" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
+                          <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Total Guests</span>
+                          <select 
+                            value={form.guests}
+                            onChange={e => setForm(f => ({ ...f, guests: parseInt(e.target.value) }))}
+                            style={{ ...inputStyle, appearance: "none", cursor: "pointer" }}
+                          >
+                            {[1,2,3,4,5,6].map(n => <option key={n} value={n} style={{ background: "#050a18", color: "#fff" }}>{n} {n === 1 ? "Guest" : "Guests"}</option>)}
+                          </select>
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
+                          <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Meal Preference</span>
+                          <div style={{ display: "flex", gap: 8 }}>
+                            {(["veg"] as const).map(v => (
+                              <button key={v} type="button" onClick={() => setForm(f => ({ ...f, meal: v }))} style={{
+                                ...toggleBase, flex: 1, fontSize: 9, padding: "12px 10px",
+                                borderColor: "rgba(167,243,208,0.85)",
+                                color:       "rgba(167,243,208,0.90)",
+                                background:  "rgba(167,243,208,0.08)",
+                              }}>Vegetarian Only</button>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
+
+                {/* Message Field */}
+                <motion.label variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                  <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Personal Message</span>
+                  <textarea 
+                    value={form.message}
+                    onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                    placeholder="Wishes for the couple..."
+                    style={{ ...inputStyle, minHeight: 100, resize: "none", padding: "14px 18px" }}
+                    onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
+                    onBlur ={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
+                  />
+                </motion.label>
+
+                {error && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                    style={{ color: "#ff6b6b", fontSize: 11, textAlign: "center", marginBottom: 10 }}
+                  >
+                    {error}
+                  </motion.div>
+                )}
+
                 <motion.div variants={fadeSlide} style={{ display: "flex", justifyContent: "center", marginTop: 8 }}>
-                  <button type="submit" style={{
+                  <button type="submit" disabled={isSubmitting} style={{
                     fontFamily: SANS, fontSize: 10, letterSpacing: "5px",
                     textTransform: "uppercase" as const, fontWeight: 500, color: INK,
-                    background: "linear-gradient(135deg,rgba(255,183,77,0.95),rgba(236,72,153,0.85))",
-                    border: "none", borderRadius: 2, padding: "15px 48px", cursor: "pointer",
+                    background: isSubmitting ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,rgba(255,183,77,0.95),rgba(236,72,153,0.85))",
+                    border: "none", borderRadius: 2, padding: "16px 56px", cursor: isSubmitting ? "default" : "pointer",
                     whiteSpace: "nowrap",
-                  }}>Send RSVP</button>
+                    boxShadow: isSubmitting ? "none" : "0 10px 30px rgba(236,72,153,0.25)",
+                    opacity: isSubmitting ? 0.5 : 1,
+                  }}>{isSubmitting ? "Processing..." : "Send RSVP"}</button>
                 </motion.div>
               </motion.form>
             ) : (
@@ -500,10 +573,10 @@ export default function EventPage() {
                 style={{ textAlign: "center", padding: "40px 0" }}
               >
                 <Rule />
-                <div style={{ fontFamily: SERIF, fontSize: "clamp(18px,3.5vw,28px)", fontWeight: 400, color: PARCHMENT, marginTop: 28, marginBottom: 14 }}>
-                  {form.attending === "yes" ? `We can't wait to see you, ${form.name}.` : `We'll miss you, ${form.name}.`}
+                <div style={{ fontFamily: SERIF, fontSize: "clamp(20px,4vw,32px)", fontWeight: 400, color: PARCHMENT, marginTop: 28, marginBottom: 14 }}>
+                  {form.attending === "yes" ? `We can't wait to see you, ${form.name.split(' ')[0]}!` : `We'll miss you, ${form.name.split(' ')[0]}.`}
                 </div>
-                <div style={{ fontFamily: SANS, fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.60)" }}>
+                <div style={{ fontFamily: SANS, fontSize: 10, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.70)" }}>
                   {form.attending === "yes" ? "Your seat is reserved" : "You are in our hearts"}
                 </div>
               </motion.div>

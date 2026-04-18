@@ -2,11 +2,17 @@ import { useState } from "react";
 import GateScreen from "./sections/GateScreen";
 import CinematicLoveSection from "./sections/CinematicLoveSection";
 import EventPage from "./sections/EventPage";
+import Dashboard from "./sections/Dashboard";
 
-type Phase = "gate" | "cinema" | "event";
+type Phase = "gate" | "cinema" | "event" | "dashboard";
 
 export default function App() {
-  const [phase, setPhase] = useState<Phase>("gate");
+  const [phase, setPhase] = useState<Phase>(() => {
+    if (typeof window !== "undefined" && window.location.search.includes("admin")) {
+      return "dashboard";
+    }
+    return "gate";
+  });
 
   return (
     <>
@@ -20,6 +26,10 @@ export default function App() {
         <CinematicLoveSection onComplete={() => setPhase("event")} />
       )}
       {phase === "event" && <EventPage />}
+      {phase === "dashboard" && <Dashboard onExit={() => {
+        window.history.replaceState({}, "", window.location.pathname);
+        setPhase("gate");
+      }} />}
     </>
   );
 }
