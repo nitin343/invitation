@@ -8,13 +8,14 @@ const AMBER = "#ffb74d";
 
 // --- Types ---
 interface RSVP {
+  id: string;
   name: string;
   phone: string;
-  attending: "yes" | "no";
+  rsvpStatus: "attending" | "declined";
   meal: "veg" | "nonveg";
-  guests: number;
+  totalGuests: number;
   message: string;
-  timestamp: string;
+  createdAt: string;
 }
 
 export default function Dashboard({ onExit }: { onExit: () => void }) {
@@ -50,10 +51,10 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
 
   const stats = {
     total: rsvps.length,
-    attending: rsvps.filter(r => r.attending === "yes").length,
-    declined: rsvps.filter(r => r.attending === "no").length,
-    totalHeads: rsvps.reduce((acc, curr) => acc + (curr.attending === "yes" ? curr.guests : 0), 0),
-    veg: rsvps.filter(r => r.attending === "yes" && r.meal === "veg").length,
+    attending: rsvps.filter(r => r.rsvpStatus === "attending").length,
+    declined: rsvps.filter(r => r.rsvpStatus === "declined").length,
+    totalHeads: rsvps.reduce((acc, curr) => acc + (curr.rsvpStatus === "attending" ? curr.totalGuests : 0), 0),
+    veg: rsvps.filter(r => r.rsvpStatus === "attending" && r.meal === "veg").length,
   };
 
   if (!isAuthorized) {
@@ -155,24 +156,24 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
                   <td colSpan={6} style={{ padding: 60, textAlign: "center", color: "rgba(255,255,255,0.2)" }}>No RSVP data captured yet.</td>
                 </tr>
               ) : (
-                rsvps.sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map((rsvp, idx) => (
-                  <tr key={idx} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                rsvps.sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((rsvp) => (
+                  <tr key={rsvp.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                     <td style={tdStyle}>
                       <div style={{ fontWeight: 600 }}>{rsvp.name}</div>
-                      <div style={{ fontSize: 10, opacity: 0.4, marginTop: 4 }}>{new Date(rsvp.timestamp).toLocaleDateString()}</div>
+                      <div style={{ fontSize: 10, opacity: 0.4, marginTop: 4 }}>{new Date(rsvp.createdAt).toLocaleDateString()}</div>
                     </td>
                     <td style={tdStyle}>
                       <span style={{ 
                         padding: "4px 10px", borderRadius: 50, fontSize: 10, fontWeight: 700, textTransform: "uppercase",
-                        background: rsvp.attending === "yes" ? "rgba(167,243,208,0.1)" : "rgba(254,202,202,0.1)",
-                        color: rsvp.attending === "yes" ? "#a7f3d0" : "#fecaca"
+                        background: rsvp.rsvpStatus === "attending" ? "rgba(167,243,208,0.1)" : "rgba(254,202,202,0.1)",
+                        color: rsvp.rsvpStatus === "attending" ? "#a7f3d0" : "#fecaca"
                       }}>
-                        {rsvp.attending === "yes" ? "Attending" : "Declined"}
+                        {rsvp.rsvpStatus === "attending" ? "Attending" : "Declined"}
                       </span>
                     </td>
-                    <td style={tdStyle}>{rsvp.attending === "yes" ? `👥 ${rsvp.guests}` : "-"}</td>
+                    <td style={tdStyle}>{rsvp.rsvpStatus === "attending" ? `👥 ${rsvp.totalGuests}` : "-"}</td>
                     <td style={tdStyle}>
-                      <span style={{ fontSize: 10, opacity: 0.7 }}>{rsvp.attending === "yes" ? (rsvp.meal === "veg" ? "Vegetarian" : "Non-Veg") : "-"}</span>
+                      <span style={{ fontSize: 10, opacity: 0.7 }}>{rsvp.rsvpStatus === "attending" ? (rsvp.meal === "veg" ? "Vegetarian" : "Non-Veg") : "-"}</span>
                     </td>
                     <td style={tdStyle}>
                       <a href={`tel:${rsvp.phone}`} style={{ color: AMBER, textDecoration: "none", fontSize: 13 }}>{rsvp.phone}</a>
