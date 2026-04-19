@@ -147,16 +147,16 @@ export default function EventPage() {
   // Celebrations — cinematic identity cards (mood + date only)
   const events = [
     { num: "01", label: "Haldi", sub: "A turmeric blessing ceremony", date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: "/assets/haldi.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-    { num: "02", label: "Reception", sub: "An evening of light & celebration", date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
-    { num: "03", label: "The Wedding", sub: "Sacred vows & eternal union", date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { num: "02", label: "Reception", sub: "An evening of light & celebration", date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantap+Raichur" },
+    { num: "03", label: "The Wedding", sub: "Sacred vows & eternal union", date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantap+Raichur" },
     { num: "04", label: "Bidar Reception", sub: "Celebrating with family in Bidar", date: "28 April", day: "Tuesday", accent: "rgba(251,191,36,0.55)", glow: "rgba(251,191,36,0.10)", img: "/assets/bidar-reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true, cardPad: "3px", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
   ];
 
   // Schedule — practical logistics: where, when, dress
   const schedule = [
     { date: "23 Apr", day: "Thursday", event: "Haldi Ceremony", venue: "Bidar", time: "Morning", dress: "Casual traditional", note: "Yellow & green attire welcome", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-    { date: "25 Apr", day: "Saturday", event: "Reception Night", venue: "GMA Kalyan Mantapa", time: "6:00 PM", dress: "Formal / ethnic wear", note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
-    { date: "26 Apr", day: "Sunday", event: "Wedding Ceremony", venue: "GMA Kalyan Mantapa", time: "Morning", dress: "Traditional attire", note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { date: "25 Apr", day: "Saturday", event: "Reception Night", venue: "Gunj Kalyan Mantap", time: "6:00 PM", dress: "Formal / ethnic wear", note: "Jalal Nagar, Raichur", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantap+Raichur" },
+    { date: "26 Apr", day: "Sunday", event: "Wedding Ceremony", venue: "Gunj Kalyan Mantap", time: "Morning", dress: "Traditional attire", note: "Jalal Nagar, Raichur", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantap+Raichur" },
     { date: "28 Apr", day: "Tuesday", event: "Reception — Bidar", venue: "Shree Function Hall", time: "Evening", dress: "Formal / ethnic wear", note: "Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
   ];
 
@@ -419,9 +419,9 @@ export default function EventPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
             {[
               {
-                venue: "Gunj Kalyan Mantapa",
-                note: "Ganj, Bidar",
-                mapsUrl: "https://maps.app.goo.gl/ggPnu7ZgtpsJsv1m6",
+                venue: "Gunj Kalyan Mantap",
+                note: "Jalal Nagar, Raichur",
+                mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantap+Raichur",
                 events: [
                   { date: "25 Apr", day: "Sat", name: "Reception Night", time: "6:00 PM", dress: "Formal / Ethnic" },
                   { date: "26 Apr", day: "Sun", name: "Wedding Ceremony", time: "Morning", dress: "Traditional" },
