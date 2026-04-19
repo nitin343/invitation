@@ -13,12 +13,26 @@ interface RSVPData {
 
 const API_URL = "/api";
 
+async function readApiResponse(response: Response) {
+  const text = await response.text();
+
+  if (!text) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { error: text };
+  }
+}
+
 export function useRSVP() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submitRSVP = useCallback(async (data: RSVPData) => {
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch(`${API_URL}/rsvp`, {
         method: "POST",
@@ -26,16 +40,25 @@ export function useRSVP() {
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
-      
-      if (result.success) {
-        return { success: true };
-      } else {
-        throw new Error(result.error || "Failed to submit RSVP");
+      const result = await readApiResponse(response);
+
+      if (!response.ok) {
+        throw new Error(
+          result?.details ||
+          result?.error ||
+          "RSVP API is unavailable. Please make sure the backend server is running."
+        );
       }
+
+      if (result?.success) {
+        return { success: true };
+      }
+
+      throw new Error(result?.error || "Failed to submit RSVP");
     } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to send RSVP. Please try again.";
       console.error("RSVP Submission Error:", err);
-      return { success: false, error: "Failed to send RSVP. Please try again." };
+      return { success: false, error: message };
     } finally {
       setIsSubmitting(false);
     }

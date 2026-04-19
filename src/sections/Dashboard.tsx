@@ -29,7 +29,7 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/admin/stats");
+        const res = await fetch("/api/admin/stats");
         const json = await res.json();
         setRsvps(json.guests || []);
       } catch (err) {
@@ -39,7 +39,7 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
 
     const fetchAISummary = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/admin/ai-analysis");
+        const res = await fetch("/api/admin/ai-analysis");
         const json = await res.json();
         setAiSummary(json.summary);
       } catch (err) {

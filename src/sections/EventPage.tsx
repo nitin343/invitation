@@ -1,6 +1,7 @@
 import { useState, useLayoutEffect, useEffect, useRef } from "react";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { useRSVP } from "../hooks/useRSVP";
+import { Language, translations } from "../i18n";
 
 // ====== LUXURY DARK DESIGN SYSTEM ======
 const SERIF = '"Playfair Display", "Cormorant Garamond", ui-serif, Georgia, serif';
@@ -127,7 +128,38 @@ const toggleBase: React.CSSProperties = {
   transition: `all ${DURATION.ui}s cubic-bezier(0.33, 1, 0.68, 1)`, background: "transparent",
 };
 
-interface EventPageProps { lang?: string; team?: string; }
+type TeamSide = "groom" | "bride";
+
+type CelebrationEvent = {
+  num: string;
+  label: string;
+  sub: string;
+  date: string;
+  day: string;
+  accent: string;
+  glow: string;
+  img: string;
+  imgH: string;
+  imgPos: string;
+  titleTop: boolean;
+  cardPad: string | undefined;
+  mapsUrl: string;
+};
+
+type ScheduleEvent = {
+  date: string;
+  month: string;
+  day: string;
+  name: string;
+  time: string;
+  venue: string;
+  note: string;
+  accent: string;
+  dress: string;
+  mapsUrl: string;
+};
+
+interface EventPageProps { lang?: Language; team?: string; }
 export default function EventPage({ lang, team }: EventPageProps = {}) {
   const { submitRSVP, isSubmitting } = useRSVP();
   const [form, setForm] = useState({
@@ -143,8 +175,10 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const rsvpRef = useRef<HTMLDivElement>(null);
+  const rsvpTouchYRef = useRef<number | null>(null);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [isRsvpFocused, setIsRsvpFocused] = useState(false);
+  const [isRsvpInView, setIsRsvpInView] = useState(false);
 
   const [isMobile, setIsMobile] = useState(false);
   const [isGeneratingWish, setIsGeneratingWish] = useState(false);
@@ -153,7 +187,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
     if (!form.name || isGeneratingWish) return;
     setIsGeneratingWish(true);
     try {
-      const res = await fetch("http://localhost:5000/api/ai/generate-wish", {
+      const res = await fetch("/api/ai/generate-wish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ guestName: form.name }),
@@ -230,28 +264,132 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
     };
   }, [isMobile]);
 
-  // Celebrations — cinematic identity cards (mood + date only)
-  const events: { num: string; label: string; sub: string; date: string; day: string; accent: string; glow: string; img: string; imgH: string; imgPos: string; titleTop: boolean; cardPad: string | undefined; mapsUrl: string }[] = [
-    { num: "01", label: "Haldi", sub: "A turmeric blessing ceremony", date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: "/assets/haldi.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-    { num: "02", label: "Reception", sub: "An evening of light & celebration", date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
-    { num: "03", label: "The Wedding", sub: "Sacred vows & eternal union", date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
-    { num: "04", label: "Bidar Reception", sub: "Celebrating with family in Bidar", date: "28 April", day: "Tuesday", accent: "rgba(251,191,36,0.55)", glow: "rgba(251,191,36,0.10)", img: "/assets/bidar-reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true, cardPad: "3px", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
-  ];
+  const blurActiveRsvpElement = () => {
+    const activeEl = document.activeElement;
+    if (activeEl instanceof HTMLElement && rsvpRef.current?.contains(activeEl)) {
+      activeEl.blur();
+    }
+  };
 
-  // Schedule — practical logistics: where, when, dress
-  const schedule = [
-    { date: "23 Apr", day: "Thursday", event: "Haldi Ceremony", venue: "Bidar", time: "Morning", dress: "Casual traditional", note: "Yellow & green attire welcome", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-    { date: "25 Apr", day: "Saturday", event: "Reception Night", venue: "GMA Kalyan Mantapa", time: "6:00 PM", dress: "Formal / ethnic wear", note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
-    { date: "26 Apr", day: "Sunday", event: "Wedding Ceremony", venue: "GMA Kalyan Mantapa", time: "Morning", dress: "Traditional attire", note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
-    { date: "28 Apr", day: "Tuesday", event: "Reception — Bidar", venue: "Shree Function Hall", time: "Evening", dress: "Formal / ethnic wear", note: "Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
-  ];
+  const releaseRsvpScrollLock = () => {
+    rsvpTouchYRef.current = null;
+    setIsRsvpFocused(false);
+    blurActiveRsvpElement();
+  };
+
+  const canRsvpScrollerMove = (scroller: HTMLDivElement, deltaY: number) => {
+    const maxScrollTop = scroller.scrollHeight - scroller.clientHeight;
+    if (maxScrollTop <= 1) return false;
+    if (deltaY > 0) return scroller.scrollTop < maxScrollTop - 1;
+    if (deltaY < 0) return scroller.scrollTop > 1;
+    return false;
+  };
+
+  useEffect(() => {
+    if (!isMobile || !rsvpRef.current || !scrollRef.current) {
+      setIsRsvpInView(false);
+      return;
+    }
+
+    const rsvpEl = rsvpRef.current;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const inView = entry.isIntersecting && entry.intersectionRatio >= 0.45;
+        setIsRsvpInView(inView);
+
+        if (!inView) {
+          releaseRsvpScrollLock();
+        }
+      },
+      {
+        root: scrollRef.current,
+        threshold: [0, 0.25, 0.45, 0.75, 1],
+      }
+    );
+
+    observer.observe(rsvpEl);
+    return () => observer.disconnect();
+  }, [isMobile]);
+
+  const selectedLang: Language = lang && translations[lang] ? lang : "en";
+  const t = translations[selectedLang];
+  const languageCopy = {
+    accept: selectedLang === "en" ? "Joyfully accept" : selectedLang === "kn" ? "Baruttene" : "Aaunga / Aaungi",
+    decline: selectedLang === "en" ? "Regretfully decline" : selectedLang === "kn" ? "Baralu sadhyavilla" : "Nahi aa paunga / paungi",
+    fullName: selectedLang === "en" ? "Full name" : selectedLang === "kn" ? "Poorna hesaru" : "Poora naam",
+    phonePlaceholder: "+91...",
+    guestsPlaceholder: selectedLang === "en" ? "Number of guests" : selectedLang === "kn" ? "Atithigala sankhye" : "Mehmanon ki sankhya",
+    messagePlaceholder: selectedLang === "en" ? "Write something or use AI help..." : selectedLang === "kn" ? "Sandesha bareyiri athava AI sahaya balasi..." : "Sandesh likhein ya AI sahayata lein...",
+    nameFirstPlaceholder: selectedLang === "en" ? "Please enter your name first for AI help..." : selectedLang === "kn" ? "AI sahayakke modalu nimma hesaru namoodisi..." : "AI sahayata ke liye pehle apna naam daalein...",
+    writing: selectedLang === "en" ? "Writing..." : selectedLang === "kn" ? "Bareyuttide..." : "Likh raha hai...",
+    processing: selectedLang === "en" ? "Processing..." : selectedLang === "kn" ? "Prakriye nadeyuttide..." : "Prakriya jaari hai...",
+    somethingWrong: selectedLang === "en" ? "Something went wrong. Please try again." : selectedLang === "kn" ? "Yeno tappagide. Matte prayatnisi." : "Kuch galat hua. Phir koshish karein.",
+    swipe: selectedLang === "en" ? "swipe" : selectedLang === "kn" ? "swipe madi" : "swipe karein",
+    raichur: selectedLang === "en" ? "Raichur" : selectedLang === "kn" ? "Raichur" : "Raichur",
+    bidar: selectedLang === "en" ? "Bidar" : selectedLang === "kn" ? "Bidar" : "Bidar",
+    morning: selectedLang === "en" ? "Morning" : selectedLang === "kn" ? "Beligge" : "Subah",
+    evening: selectedLang === "en" ? "Evening" : selectedLang === "kn" ? "Sanje" : "Shaam",
+    traditional: selectedLang === "en" ? "Traditional" : selectedLang === "kn" ? "Sampradayika" : "Paramparik",
+    formalEthnic: selectedLang === "en" ? "Formal / Ethnic" : selectedLang === "kn" ? "Formal / Ethnic" : "Formal / Ethnic",
+    casualTraditional: selectedLang === "en" ? "Casual traditional" : selectedLang === "kn" ? "Sarala sampradayika" : "Saadhaaran paramparik",
+    haldiSub: selectedLang === "en" ? "A turmeric blessing ceremony in Bidar" : selectedLang === "kn" ? "Bidaralli haldi ashirvada samarambha" : "Bidar mein haldi ashirvad samaroh",
+    receptionSub: selectedLang === "en" ? "An evening of light in Raichur" : selectedLang === "kn" ? "Raichuralli sanjeya sambhrama" : "Raichur mein shaam ka utsav",
+    marriageSub: selectedLang === "en" ? "Sacred vows at Gunj Kalyan Mantapa" : selectedLang === "kn" ? "Gunj Kalyan Mantapadalli pavitra vachana" : "Gunj Kalyan Mantapa mein pavitra vachan",
+    bidarReceptionSub: selectedLang === "en" ? "Celebrating with family in Bidar" : selectedLang === "kn" ? "Bidaralli kutumbada jothe sambhrama" : "Bidar mein parivaar ke saath utsav",
+    handraSub: selectedLang === "en" ? "A joyful Handra celebration in Raichur" : selectedLang === "kn" ? "Raichuralli Handra sambhrama" : "Raichur mein Handra utsav",
+    brideSideCelebration: selectedLang === "en" ? "Bride side celebration" : selectedLang === "kn" ? "Vadhu kadeya sambhrama" : "Vadhu paksh utsav",
+    yellowGreenWelcome: selectedLang === "en" ? "Yellow & green attire welcome" : selectedLang === "kn" ? "Haladi mattu hasiru vastragalige swagata" : "Peeli aur hari poshak ka swagat hai",
+    eventVenue: selectedLang === "en" ? "26 April 2026 - Gunj Kalyan Mantapa - Raichur" : selectedLang === "kn" ? "26 April 2026 - Gunj Kalyan Mantapa - Raichur" : "26 April 2026 - Gunj Kalyan Mantapa - Raichur",
+  };
+
+  const shouldTrapRsvpScroll = isMobile && isRsvpFocused && isRsvpInView && !submitted;
+
+  const selectedTeam: TeamSide = team === "bride" ? "bride" : "groom";
+
+  const celebrationEventsByTeam: Record<TeamSide, CelebrationEvent[]> = {
+    groom: [
+      { num: "01", label: t.haldi, sub: languageCopy.haldiSub, date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: "/assets/haldi.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
+      { num: "02", label: t.reception, sub: languageCopy.receptionSub, date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { num: "03", label: t.wedding, sub: languageCopy.marriageSub, date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { num: "04", label: t.bidarReception, sub: languageCopy.bidarReceptionSub, date: "28 April", day: "Tuesday", accent: "rgba(251,191,36,0.55)", glow: "rgba(251,191,36,0.10)", img: "/assets/bidar-reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true, cardPad: "3px", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Shree+Function+Hall+Bidar" },
+    ],
+    bride: [
+      { num: "01", label: t.handra, sub: languageCopy.handraSub, date: "24 April", day: "Friday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: "/assets/haldi.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Raichur" },
+      { num: "02", label: t.reception, sub: languageCopy.receptionSub, date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { num: "03", label: t.wedding, sub: languageCopy.marriageSub, date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+    ],
+  };
+
+  const scheduleEventsByTeam: Record<TeamSide, ScheduleEvent[]> = {
+    groom: [
+      { date: "23", month: "Apr", day: "Thu", name: t.haldi, time: languageCopy.morning, venue: languageCopy.bidar, note: languageCopy.yellowGreenWelcome, accent: "rgba(251,191,36,0.65)", dress: languageCopy.casualTraditional, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
+      { date: "25", month: "Apr", day: "Sat", name: t.reception, time: languageCopy.evening, venue: "Gunj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(167,243,208,0.60)", dress: languageCopy.formalEthnic, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { date: "26", month: "Apr", day: "Sun", name: t.wedding, time: languageCopy.morning, venue: "Gunj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(232,121,249,0.60)", dress: languageCopy.traditional, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { date: "28", month: "Apr", day: "Tue", name: t.reception, time: languageCopy.evening, venue: "Shree Function Hall", note: languageCopy.bidar, accent: "rgba(251,191,36,0.55)", dress: languageCopy.formalEthnic, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Shree+Function+Hall+Bidar" },
+    ],
+    bride: [
+      { date: "24", month: "Apr", day: "Fri", name: t.handra, time: languageCopy.morning, venue: languageCopy.raichur, note: languageCopy.brideSideCelebration, accent: "rgba(251,191,36,0.65)", dress: languageCopy.traditional, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Raichur" },
+      { date: "25", month: "Apr", day: "Sat", name: t.reception, time: languageCopy.evening, venue: "Gunj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(167,243,208,0.60)", dress: languageCopy.formalEthnic, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { date: "26", month: "Apr", day: "Sun", name: t.wedding, time: languageCopy.morning, venue: "Gunj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(232,121,249,0.60)", dress: languageCopy.traditional, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+    ],
+  };
+
+  const events = celebrationEventsByTeam[selectedTeam];
+  const scheduleEvents = scheduleEventsByTeam[selectedTeam];
+
+  useEffect(() => {
+    setActiveCardIndex(0);
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = 0;
+    }
+  }, [selectedTeam]);
 
   return (
     <div
       ref={scrollRef}
       style={{
         height: "100svh", overflowY: "scroll",
-        scrollSnapType: isMobile && isRsvpFocused ? "none" : "y mandatory",
+        scrollSnapType: shouldTrapRsvpScroll ? "none" : "y mandatory",
         WebkitOverflowScrolling: "touch",
         position: "fixed", inset: 0, zIndex: 100,
       }}
@@ -280,7 +418,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
             fontFamily: SANS, fontSize: "clamp(9px,2.8vw,13px)", letterSpacing: "6px",
             textTransform: "uppercase" as const, color: "#d4f5e9", marginBottom: 22,
             textShadow: "0 2px 18px rgba(0,0,0,0.9)",
-          }}>You are cordially invited</motion.div>
+          }}>{t.welcome}</motion.div>
           <motion.div variants={fadeSlide} style={{
             fontFamily: SERIF, fontSize: "clamp(44px,13vw,100px)", fontWeight: 500,
             color: "#fff8ef", lineHeight: 1, marginBottom: 16,
@@ -295,7 +433,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
           <motion.div variants={fadeIn} style={{
             fontFamily: SERIF, fontSize: "clamp(12px,3.5vw,18px)",
             fontStyle: "italic", color: "rgba(232,223,208,0.60)", marginBottom: 22,
-          }}>Together with their families</motion.div>
+          }}>{t.togetherFamilies}</motion.div>
           <motion.div variants={fadeIn}><Rule /></motion.div>
           <motion.div variants={fadeIn} style={{
             marginTop: 18, fontFamily: SANS, fontSize: "clamp(10px,2.8vw,13px)",
@@ -310,7 +448,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
             fontFamily: SANS, fontSize: 8, letterSpacing: "5px",
             textTransform: "uppercase" as const, color: "rgba(232,223,208,0.5)",
           }}
-        >swipe</motion.div>
+        >{languageCopy.swipe}</motion.div>
       </section>
 
       {/* VERSE */}
@@ -320,13 +458,13 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
           viewport={{ root: scrollRef, amount: 0.6, once: true }}
           style={{ position: "relative", zIndex: 1, textAlign: "center", padding: "0 clamp(24px, 8vw, 80px)" }}
         >
-          <motion.div variants={fadeIn}><Eyebrow>A Beginning</Eyebrow><Rule /></motion.div>
+          <motion.div variants={fadeIn}><Eyebrow>{t.beginning}</Eyebrow><Rule /></motion.div>
           <motion.div variants={fadeSlide} style={{
             fontFamily: SERIF,
             fontSize: "clamp(20px, 5.5vw, 38px)", color: TEXT_CREAM,
             lineHeight: 1.75, maxWidth: 520, margin: `${SPACE.xl} auto 0`,
           }}>
-            "Two hearts, one journey —<br />beginning their forever together."
+            {t.beginningQuote}
           </motion.div>
           <motion.div variants={fadeIn} style={{
             marginTop: SPACE.xl, fontFamily: SANS, fontSize: 10, letterSpacing: "2px",
@@ -356,7 +494,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
           }}
         >
           <motion.div variants={fadeIn} style={{ textAlign: "center", marginBottom: "clamp(10px, 2vh, 18px)", flexShrink: 0 }}>
-            <Eyebrow>The Celebrations</Eyebrow><Rule />
+            <Eyebrow>{t.celebration}</Eyebrow><Rule />
           </motion.div>
 
           {/* 2×2 cinematic cards — name + mood + date only, fills remaining height */}
@@ -401,7 +539,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                   flex: isMobile ? "0 0 82vw" : "1",
                   minHeight: isMobile ? undefined : "clamp(180px, 32vh, 260px)",
                   scrollSnapAlign: isMobile ? "center" : "none",
-                  boxShadow: label === "Haldi" ? "none" : isMobile && cardIndex === activeCardIndex ? "0 20px 60px rgba(212,175,55,0.3)" : isMobile ? "0 10px 30px rgba(0,0,0,0.4)" : "none",
+                  boxShadow: selectedTeam === "groom" && cardIndex === 0 ? "none" : isMobile && cardIndex === activeCardIndex ? "0 20px 60px rgba(212,175,55,0.3)" : isMobile ? "0 10px 30px rgba(0,0,0,0.4)" : "none",
                   transform: isMobile ? (cardIndex === activeCardIndex ? "scale(1)" : "scale(0.88)") : undefined,
                   opacity: isMobile ? (cardIndex === activeCardIndex ? 1 : 0.6) : undefined,
                   gap: isMobile ? 0 : 22,
@@ -425,7 +563,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                     display: "block",
                     filter: "brightness(0.85) saturate(1.1) contrast(1.05)",
                   }} />
-                  {label !== "Haldi" && (
+                  {!(selectedTeam === "groom" && cardIndex === 0) && (
                     <div style={{
                       position: "absolute", inset: 0,
                       background: `linear-gradient(to top, ${accent.replace(/[\d.]+\)$/, "0.45)")} 0%, transparent 60%)`,
@@ -514,7 +652,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
           }}
         >
           <motion.div variants={fadeIn} style={{ textAlign: "center", marginBottom: isMobile ? "clamp(12px, 2vh, 18px)" : "clamp(18px, 3vh, 28px)", flexShrink: 0 }}>
-            <Eyebrow>Where &amp; When</Eyebrow><Rule />
+            <Eyebrow>{t.whereWhen}</Eyebrow><Rule />
           </motion.div>
 
           <div style={{
@@ -525,48 +663,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
             minHeight: 0,
             alignContent: "center",
           }}>
-            {[
-              {
-                date: "23", month: "Apr", day: "Thu",
-                name: "Haldi Ceremony",
-                time: "Morning",
-                venue: "Bidar",
-                note: "Yellow & green attire welcome",
-                accent: "rgba(251,191,36,0.65)",
-                dress: "Casual traditional",
-                mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar",
-              },
-              {
-                date: "25", month: "Apr", day: "Sat",
-                name: "Reception Night",
-                time: "6:00 PM",
-                venue: "Gunj Kalyan Mantapa",
-                note: "Ganj, Bidar",
-                accent: "rgba(167,243,208,0.60)",
-                dress: "Formal / Ethnic",
-                mapsUrl: "https://maps.app.goo.gl/ggPnu7ZgtpsJsv1m6",
-              },
-              {
-                date: "26", month: "Apr", day: "Sun",
-                name: "Wedding Ceremony",
-                time: "Morning",
-                venue: "Gunj Kalyan Mantapa",
-                note: "Ganj, Bidar",
-                accent: "rgba(232,121,249,0.60)",
-                dress: "Traditional",
-                mapsUrl: "https://maps.app.goo.gl/ggPnu7ZgtpsJsv1m6",
-              },
-              {
-                date: "28", month: "Apr", day: "Tue",
-                name: "Bidar Reception",
-                time: "Evening",
-                venue: "Shree Function Hall",
-                note: "Bidar",
-                accent: "rgba(251,191,36,0.55)",
-                dress: "Formal / Ethnic",
-                mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar",
-              }
-            ].map((e, i) => (
+            {scheduleEvents.map((e, i) => (
               <motion.div key={i} variants={fadeSlide} style={{
                 position: "relative",
                 display: "flex",
@@ -651,7 +748,10 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
           ref={rsvpRef}
           variants={staggerParent} initial="hidden" whileInView="show"
           viewport={{ root: scrollRef, amount: 0.2, once: true }}
-          onFocusCapture={() => setIsRsvpFocused(true)}
+          onFocusCapture={() => {
+            setIsRsvpInView(true);
+            setIsRsvpFocused(true);
+          }}
           onBlurCapture={() => {
             requestAnimationFrame(() => {
               setIsRsvpFocused(Boolean(rsvpRef.current?.contains(document.activeElement)));
@@ -667,23 +767,45 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
           }}
         >
           <motion.div variants={fadeIn} style={{ textAlign: "center", marginBottom: isMobile ? "clamp(12px, 2vh, 18px)" : SPACE.xl, flexShrink: 0 }}>
-            <Eyebrow>Kindly Reply By - 22 April</Eyebrow>
+            <Eyebrow>{t.rsvpDeadline}</Eyebrow>
             <div style={{
               fontFamily: SERIF, fontSize: isMobile ? "clamp(30px, 8vw, 42px)" : "clamp(40px, 5vw, 56px)",
               fontWeight: 400, color: TEXT_CREAM, marginBottom: isMobile ? SPACE.md : SPACE.lg,
               letterSpacing: "2px",
-            }}>RSVP</div>
+            }}>{t.rsvpTitle}</div>
             <Rule />
           </motion.div>
 
           <div
-            onWheel={isMobile && isRsvpFocused ? e => e.stopPropagation() : undefined}
-            onTouchMove={isMobile && isRsvpFocused ? e => e.stopPropagation() : undefined}
+            onWheel={shouldTrapRsvpScroll ? e => {
+              if (canRsvpScrollerMove(e.currentTarget, e.deltaY)) {
+                e.stopPropagation();
+              } else {
+                releaseRsvpScrollLock();
+              }
+            } : undefined}
+            onTouchStart={shouldTrapRsvpScroll ? e => {
+              rsvpTouchYRef.current = e.touches[0]?.clientY ?? null;
+            } : undefined}
+            onTouchMove={shouldTrapRsvpScroll ? e => {
+              const touchY = e.touches[0]?.clientY;
+              const lastTouchY = rsvpTouchYRef.current;
+              if (touchY == null || lastTouchY == null) return;
+
+              const deltaY = lastTouchY - touchY;
+              rsvpTouchYRef.current = touchY;
+
+              if (canRsvpScrollerMove(e.currentTarget, deltaY)) {
+                e.stopPropagation();
+              } else if (Math.abs(deltaY) > 2) {
+                releaseRsvpScrollLock();
+              }
+            } : undefined}
             style={{
               flex: 1,
               minHeight: 0,
-              overflowY: "auto",
-              overscrollBehaviorY: isMobile && isRsvpFocused ? "contain" : "auto",
+              overflowY: submitted ? "visible" : "auto",
+              overscrollBehaviorY: shouldTrapRsvpScroll ? "contain" : "auto",
               WebkitOverflowScrolling: "touch",
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -697,11 +819,13 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                   onSubmit={async (e) => {
                     e.preventDefault();
                     setError(null);
-                    const res = await submitRSVP(form);
+                    const res = await submitRSVP({ ...form, team: selectedTeam, lang: lang || "en" });
                     if (res.success) {
                       setSubmitted(true);
+                      setIsRsvpFocused(false);
+                      (document.activeElement as HTMLElement | null)?.blur();
                     } else {
-                      setError(res.error || "Something went wrong. Please try again.");
+                      setError(res.error || languageCopy.somethingWrong);
                     }
                   }}
                   style={{
@@ -714,19 +838,19 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                 >
                   <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))", gap: isMobile ? 14 : SPACE.md }}>
                     <motion.label variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: SPACE.sm, minWidth: 0 }}>
-                      <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>Your Name</span>
+                      <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>{t.name}</span>
                       <input type="text" required value={form.name}
                         onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                        placeholder="Full name" style={{ ...inputStyle, padding: isMobile ? "13px 16px" : inputStyle.padding, borderRadius: 8 }}
+                        placeholder={languageCopy.fullName} style={{ ...inputStyle, padding: isMobile ? "13px 16px" : inputStyle.padding, borderRadius: 8 }}
                         onFocus={e => (e.currentTarget.style.borderColor = `${GOLD_EVENT}72`)}
                         onBlur={e => (e.currentTarget.style.borderColor = `${GOLD_EVENT}24`)}
                       />
                     </motion.label>
                     <motion.label variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: SPACE.sm, minWidth: 0 }}>
-                      <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>Phone Number</span>
+                      <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>{t.phone}</span>
                       <input type="tel" value={form.phone}
                         onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                        placeholder="+91..." style={{ ...inputStyle, padding: isMobile ? "13px 16px" : inputStyle.padding, borderRadius: 8 }}
+                        placeholder={languageCopy.phonePlaceholder} style={{ ...inputStyle, padding: isMobile ? "13px 16px" : inputStyle.padding, borderRadius: 8 }}
                         onFocus={e => (e.currentTarget.style.borderColor = `${GOLD_EVENT}72`)}
                         onBlur={e => (e.currentTarget.style.borderColor = `${GOLD_EVENT}24`)}
                       />
@@ -734,7 +858,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                   </div>
 
                   <motion.div variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: SPACE.sm }}>
-                    <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>Will you be attending?</span>
+                    <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>{t.willAttend}</span>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: isMobile ? 10 : SPACE.md }}>
                       {(["yes", "no"] as const).map(v => (
                         <button key={v} type="button" onClick={() => setForm(f => ({ ...f, attending: v }))} style={{
@@ -746,7 +870,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                           borderColor: form.attending === v ? GOLD_EVENT : `${GOLD_EVENT}38`,
                           color: form.attending === v ? GOLD_EVENT : TEXT_MUTED,
                           background: form.attending === v ? `${GOLD_EVENT}1a` : "transparent",
-                        }}>{v === "yes" ? "Joyfully accept" : "Regretfully decline"}</button>
+                        }}>{v === "yes" ? languageCopy.accept : languageCopy.decline}</button>
                       ))}
                     </div>
                   </motion.div>
@@ -758,14 +882,14 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                       >
                         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1fr)", gap: SPACE.md }}>
                           <div style={{ display: "flex", flexDirection: "column", gap: SPACE.sm, minWidth: 0 }}>
-                            <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>Total Guests</span>
+                            <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>{t.guests}</span>
                             <input
                               type="number"
                               min={1}
                               value={form.guests}
                               onChange={e => setForm(f => ({ ...f, guests: parseInt(e.target.value) || 1 }))}
                               style={{ ...inputStyle, padding: isMobile ? "13px 16px" : inputStyle.padding, borderRadius: 8 }}
-                              placeholder="Number of guests"
+                              placeholder={languageCopy.guestsPlaceholder}
                               onFocus={e => (e.currentTarget.style.borderColor = `${GOLD_EVENT}72`)}
                               onBlur={e => (e.currentTarget.style.borderColor = `${GOLD_EVENT}24`)}
                             />
@@ -777,7 +901,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
 
                   <motion.label variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: SPACE.sm }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-                      <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>Personal Message</span>
+                      <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>{t.message}</span>
                       <button
                         type="button"
                         onClick={generateAIWish}
@@ -789,13 +913,13 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {isGeneratingWish ? "Writing..." : "AI Help"}
+                        {isGeneratingWish ? languageCopy.writing : t.aiHelp}
                       </button>
                     </div>
                     <textarea
                       value={form.message}
                       onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                      placeholder={form.name ? "Write something or use AI help..." : "Please enter your name first for AI help..."}
+                      placeholder={form.name ? languageCopy.messagePlaceholder : languageCopy.nameFirstPlaceholder}
                       style={{ ...inputStyle, minHeight: isMobile ? 96 : 116, resize: "vertical", padding: isMobile ? "13px 16px" : `${SPACE.md} ${SPACE.lg}`, borderRadius: 8 }}
                       onFocus={e => (e.currentTarget.style.borderColor = `${GOLD_EVENT}72`)}
                       onBlur={e => (e.currentTarget.style.borderColor = `${GOLD_EVENT}24`)}
@@ -823,7 +947,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                       boxShadow: isSubmitting ? "none" : `0 10px 30px ${GOLD_EVENT}40`,
                       opacity: isSubmitting ? 0.5 : 1,
                       transition: `all ${DURATION.ui}s cubic-bezier(0.33, 1, 0.68, 1)`,
-                    }}>{isSubmitting ? "Processing..." : "Send RSVP"}</button>
+                    }}>{isSubmitting ? languageCopy.processing : t.sendRSVP}</button>
                   </motion.div>
                 </motion.form>
               ) : (
@@ -833,10 +957,10 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                 >
                   <Rule />
                   <div style={{ fontFamily: SERIF, fontSize: "clamp(20px, 4vw, 32px)", fontWeight: 400, color: TEXT_CREAM, marginTop: SPACE.xl, marginBottom: SPACE.lg }}>
-                    {form.attending === "yes" ? `We can't wait to see you, ${form.name.split(' ')[0]}!` : `We'll miss you, ${form.name.split(' ')[0]}.`}
+                    {form.attending === "yes" ? `${t.cantWait}${form.name.split(' ')[0]}!` : `${t.missYou}${form.name.split(' ')[0]}.`}
                   </div>
                   <div style={{ fontFamily: SANS, fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED }}>
-                    {form.attending === "yes" ? "Your seat is reserved" : "You are in our hearts"}
+                    {form.attending === "yes" ? t.seatReserved : t.inOurHearts}
                   </div>
                 </motion.div>
               )}
@@ -861,11 +985,11 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
           <motion.div variants={fadeIn} style={{
             marginTop: SPACE.lg, fontFamily: SANS, fontSize: 9, letterSpacing: "2px",
             textTransform: "uppercase" as const, color: `${TEXT_CREAM}33`,
-          }}>Forever &amp; always</motion.div>
+          }}>{t.foreverAlways}</motion.div>
           <motion.div variants={fadeIn} style={{
             marginTop: SPACE.xl, fontFamily: SANS, fontSize: 9, letterSpacing: "2px",
             textTransform: "uppercase" as const, color: `${GOLD_EVENT}38`,
-          }}>26 April 2026 · GMA Kalyan Mantapa · Ganj</motion.div>
+          }}>{languageCopy.eventVenue}</motion.div>
         </motion.div>
       </SnapSection>
 

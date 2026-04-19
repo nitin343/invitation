@@ -115,23 +115,32 @@ app.use((req, res, next) => {
 // --- RSVP Submission ---
 app.post('/api/rsvp', async (req, res) => {
   try {
-    const { name, phone, attending, meal, guests, message } = req.body;
-    
+    const { name, phone, attending, meal, guests, message, team, lang } = req.body;
+    const cleanName = typeof name === 'string' ? name.trim() : '';
+
+    if (!cleanName) {
+      return res.status(400).json({ success: false, error: 'Name is required.' });
+    }
+
+    const parsedGuests = Number.parseInt(String(guests ?? 1), 10);
+
     const rsvp = await prisma.guest.create({
       data: {
-        name,
-        phone,
-        rsvpStatus: attending === 'yes' ? 'attending' : 'declined',
-        meal,
-        totalGuests: guests,
-        message
+        name: cleanName,
+        phone: typeof phone === 'string' ? phone.trim() : '',
+        rsvpStatus: attending === 'no' ? 'declined' : 'attending',
+        meal: meal || 'veg',
+        totalGuests: Number.isFinite(parsedGuests) && parsedGuests > 0 ? parsedGuests : 1,
+        message: typeof message === 'string' ? message.trim() : '',
+        team: team || 'groom',
+        lang: lang || 'en'
       }
     });
 
     res.status(201).json({ success: true, id: rsvp.id });
   } catch (err) {
     console.error('RSVP Error:', err);
-    res.status(500).json({ success: false, error: 'Internal Server Error' });
+    res.status(500).json({ success: false, error: 'Unable to save RSVP right now.', details: err.message });
   }
 });
 

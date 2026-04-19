@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/i18n.ts","./src/main.tsx","./src/vite-env.d.ts","./src/components/aiconcierge.tsx","./src/components/welcomeflow.tsx","./src/hooks/useambientaudio.ts","./src/hooks/usersvp.ts","./src/sections/cinematiclovesection.tsx","./src/sections/dashboard.tsx","./src/sections/eventpage.tsx","./src/sections/gatescreen.tsx"],"version":"5.9.3"}

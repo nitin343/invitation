@@ -90,16 +90,23 @@ export default async function handler(req, res) {
 
     // --- RSVP Submission ---
     if (path === '/api/rsvp' && req.method === 'POST') {
-      const { name, phone, attending, guests, message, team, lang } = body;
+      const { name, phone, attending, meal, guests, message, team, lang } = body;
+      const cleanName = typeof name === 'string' ? name.trim() : '';
+
+      if (!cleanName) {
+        return res.status(400).json({ success: false, error: 'Name is required.' });
+      }
+
+      const parsedGuests = Number.parseInt(String(guests ?? 1), 10);
       
       const rsvp = await prisma.guest.create({
         data: {
-          name: name || "Anonymous",
-          phone: phone || "",
-          rsvpStatus: attending === 'yes' ? 'attending' : 'declined',
-          meal: "veg",
-          totalGuests: parseInt(guests) || 1,
-          message: message || "",
+          name: cleanName,
+          phone: typeof phone === 'string' ? phone.trim() : '',
+          rsvpStatus: attending === 'no' ? 'declined' : 'attending',
+          meal: meal || "veg",
+          totalGuests: Number.isFinite(parsedGuests) && parsedGuests > 0 ? parsedGuests : 1,
+          message: typeof message === 'string' ? message.trim() : "",
           team: team || "groom",
           lang: lang || "en"
         }
@@ -120,6 +127,6 @@ export default async function handler(req, res) {
     return res.status(404).json({ error: "Not Found", path });
   } catch (err) {
     console.error("Server Error:", err);
-    return res.status(500).json({ error: "Server Error", details: err.message });
+    return res.status(500).json({ success: false, error: "Server Error", details: err.message });
   }
 }

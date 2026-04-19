@@ -37,7 +37,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   return (
     <div style={{ 
       position: "fixed", inset: 0, zIndex: 10000, 
-      backgroundImage: "url(/assets/frame2.jpeg)",
+      backgroundImage: "url(/assets/frame4.png)",
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
