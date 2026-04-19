@@ -4,7 +4,7 @@ interface RSVPData {
   name: string;
   phone: string;
   attending: "yes" | "no";
-  meal: "veg" | "nonveg";
+  meal: "veg" | "nonveg" | "vegan";
   guests: number;
   message: string;
 }
