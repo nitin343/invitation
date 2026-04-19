@@ -359,15 +359,15 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
 
   const celebrationEventsByTeam: Record<TeamSide, CelebrationEvent[]> = {
     groom: [
-      { num: "01", label: t.haldi, sub: languageCopy.haldiSub, date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: "/assets/haldi-opt.avif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-      { num: "02", label: t.reception, sub: languageCopy.receptionSub, date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception-opt.avif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
-      { num: "03", label: t.wedding, sub: languageCopy.marriageSub, date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage-opt.avif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
-      { num: "04", label: t.bidarReception, sub: languageCopy.bidarReceptionSub, date: "28 April", day: "Tuesday", accent: "rgba(251,191,36,0.55)", glow: "rgba(251,191,36,0.10)", img: "/assets/bidar-reception-opt.avif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true, cardPad: "3px", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Shree+Function+Hall+Bidar" },
+      { num: "01", label: t.haldi, sub: languageCopy.haldiSub, date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: "/assets/haldi.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
+      { num: "02", label: t.reception, sub: languageCopy.receptionSub, date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { num: "03", label: t.wedding, sub: languageCopy.marriageSub, date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { num: "04", label: t.bidarReception, sub: languageCopy.bidarReceptionSub, date: "28 April", day: "Tuesday", accent: "rgba(251,191,36,0.55)", glow: "rgba(251,191,36,0.10)", img: "/assets/bidar-reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true, cardPad: "3px", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Shree+Function+Hall+Bidar" },
     ],
     bride: [
-      { num: "01", label: t.handra, sub: languageCopy.handraSub, date: "24 April", day: "Friday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: "/assets/haldi-opt.avif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Raichur" },
-      { num: "02", label: t.reception, sub: languageCopy.receptionSub, date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception-opt.avif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
-      { num: "03", label: t.wedding, sub: languageCopy.marriageSub, date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage-opt.avif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { num: "01", label: t.handra, sub: languageCopy.handraSub, date: "24 April", day: "Friday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: "/assets/haldi.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Raichur" },
+      { num: "02", label: t.reception, sub: languageCopy.receptionSub, date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { num: "03", label: t.wedding, sub: languageCopy.marriageSub, date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
     ],
   };
 
@@ -413,7 +413,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
         alignItems: "center", justifyContent: "center",
       }}>
         <ParallaxBg
-          src="/assets/couple-photo-1-opt.jpg"
+          src="/assets/couple-photo-1.png"
           scrollRef={scrollRef}
           filter="blur(13px) brightness(0.62) saturate(0.75) contrast(1.1)"
         />

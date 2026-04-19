@@ -55,8 +55,8 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
             transition={{ duration: 1.5 }}
             style={{ textAlign: "center" }}
           >
-            <motion.img 
-              src="/assets/ganesh-opt.avif" 
+            <motion.img
+              src="/assets/ganesh.png"
               alt="Ganesh" 
               initial={{ scale: 0.8, filter: "brightness(0)" }}
               animate={{ scale: 1, filter: "brightness(1)" }}
