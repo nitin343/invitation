@@ -19,8 +19,6 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   // Test CDN URL generation
   const frameUrl = getCDNUrl('frame4', { width: 1200 });
   const ganeshUrl = getCDNUrl('ganesh', { width: 600 });
-  console.log('🟢 WelcomeFlow mounted - Frame URL:', frameUrl);
-  console.log('🟢 WelcomeFlow mounted - Ganesh URL:', ganeshUrl);
 
   useEffect(() => {
     if (step === 'ganpati') {

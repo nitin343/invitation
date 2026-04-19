@@ -14,7 +14,6 @@ export const getCDNUrl = (
   } = {}
 ) => {
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dr5frqshz';
-  console.log('🔵 getCDNUrl called:', { filename, cloudName, env: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME });
   const { width = 1200, height, quality = 'auto', aspect_ratio, isVideo, isAudio } = options;
 
   // Remove extension and sanitize for cleaner Cloudinary path
@@ -26,7 +25,6 @@ export const getCDNUrl = (
   // For audio/video, use simpler URL without image transformations
   if (isAudio || isVideo) {
     const url = `https://res.cloudinary.com/${cloudName}/video/upload/${publicId}`;
-    console.log(`[CDN] ${isAudio ? 'Audio' : 'Video'}: ${filename} → ${url}`);
     return url;
   }
 
@@ -42,7 +40,6 @@ export const getCDNUrl = (
     .join(',');
 
   const url = `https://res.cloudinary.com/${cloudName}/image/upload/${transforms}/${publicId}`;
-  console.log(`[CDN] Image: ${filename} → ${url}`);
   return url;
 };
 
