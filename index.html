@@ -10,12 +10,23 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+Kannada:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <!-- Critical images for first load -->
+    <link rel="preload" href="/assets/frame4.png" as="image" />
     <link rel="preload" href="/assets/ganesh-opt.png" as="image" />
+    <!-- Secondary images - high priority -->
     <link rel="preload" href="/assets/couple-photo-1-opt.jpg" as="image" />
-    <link rel="preload" href="/assets/haldi.jfif" as="image" />
-    <link rel="preload" href="/assets/reception.jfif" as="image" />
-    <link rel="preload" href="/assets/marriage.jfif" as="image" />
-    <link rel="preload" href="/assets/bidar-reception.jfif" as="image" />
+    <!-- Event images - defer loading -->
+    <link rel="prefetch" href="/assets/haldi.jfif" as="image" />
+    <link rel="prefetch" href="/assets/reception.jfif" as="image" />
+    <link rel="prefetch" href="/assets/marriage.jfif" as="image" />
+    <link rel="prefetch" href="/assets/bidar-reception.jfif" as="image" />
+    <link rel="prefetch" href="/assets/door.jfif" as="image" />
+    <!-- Minimal critical CSS -->
+    <style>
+      * { margin: 0; padding: 0; }
+      body { background: #050a18; overflow: hidden; }
+      #root { width: 100vw; height: 100vh; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
