@@ -1,18 +1,18 @@
-const { PrismaClient } = require('@prisma/client');
-const { GoogleGenAI } = require('@google/genai');
+import { PrismaClient } from '@prisma/client';
+import { GoogleGenAI } from '@google/genai';
 
-// Global Prisma instance
+// Initialize Prisma
 let prisma;
-try {
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient();
+} else {
   if (!global.prisma) {
     global.prisma = new PrismaClient();
   }
   prisma = global.prisma;
-} catch (e) {
-  console.error("Prisma Init Error:", e);
 }
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI(process.env.GEMINI_API_KEY);
 
 const weddingContext = `
 You are Maya, the AI Wedding Concierge for Niteen and Apoorva's wedding.
@@ -25,7 +25,7 @@ Details:
 - Dress Code: Traditional/Ethnic.
 `;
 
-// Helper to parse JSON body in native Vercel handler
+// Helper to parse JSON body
 async function getBody(req) {
   return new Promise((resolve) => {
     let body = "";
@@ -40,8 +40,8 @@ async function getBody(req) {
   });
 }
 
-module.exports = async (req, res) => {
-  // Enable CORS
+export default async function handler(req, res) {
+  // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -51,7 +51,6 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  // Robust path detection
   const url = new URL(req.url, `http://${req.headers.host}`);
   const path = url.pathname;
 
@@ -61,28 +60,30 @@ module.exports = async (req, res) => {
     // --- AI Chat ---
     if (path === '/api/ai/chat' && req.method === 'POST') {
       const { message, history } = body;
-      const contents = [
-        { role: "user", parts: [{ text: weddingContext }] },
-        { role: "model", parts: [{ text: "I am Maya, ready to help! ✨" }] },
-        ...(history || []).map(h => ({ role: h.role === "model" ? "model" : "user", parts: h.parts })),
-        { role: "user", parts: [{ text: message }] }
-      ];
-      const result = await ai.models.generateContent({ model: "gemini-3-flash-preview", contents });
-      return res.status(200).json({ text: result.text });
+      const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const chat = model.startChat({
+        history: [
+          { role: "user", parts: [{ text: weddingContext }] },
+          { role: "model", parts: [{ text: "I am Maya, ready to help! ✨" }] },
+          ...(history || []).map(h => ({ role: h.role === "model" ? "model" : "user", parts: h.parts }))
+        ]
+      });
+
+      const result = await chat.sendMessage(message);
+      return res.status(200).json({ text: result.response.text() });
     }
 
     // --- RSVP Submission ---
     if (path === '/api/rsvp' && req.method === 'POST') {
-      const { name, phone, attending, meal, guests, message } = body;
+      const { name, phone, attending, guests, message } = body;
       
-      if (!prisma) throw new Error("Database client not initialized");
-
       const rsvp = await prisma.guest.create({
         data: {
           name: name || "Anonymous",
           phone: phone || "",
           rsvpStatus: attending === 'yes' ? 'attending' : 'declined',
-          meal: meal || "veg",
+          meal: "veg", // Default as per latest UI change
           totalGuests: parseInt(guests) || 1,
           message: message || ""
         }
@@ -105,4 +106,4 @@ module.exports = async (req, res) => {
     console.error("Server Error:", err);
     return res.status(500).json({ error: "Server Error", details: err.message });
   }
-};
+}
