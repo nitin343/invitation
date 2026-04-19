@@ -1,15 +1,13 @@
 const { PrismaClient } = require('@prisma/client');
 const { GoogleGenAI } = require('@google/genai');
 
-// Global Prisma instance to prevent connection exhaustion
+// Global Prisma instance
 let prisma;
 try {
-  if (process.env.NODE_ENV === 'production') {
-    prisma = new PrismaClient();
-  } else {
-    if (!global.prisma) global.prisma = new PrismaClient();
-    prisma = global.prisma;
+  if (!global.prisma) {
+    global.prisma = new PrismaClient();
   }
+  prisma = global.prisma;
 } catch (e) {
   console.error("Prisma Init Error:", e);
 }
@@ -27,6 +25,21 @@ Details:
 - Dress Code: Traditional/Ethnic.
 `;
 
+// Helper to parse JSON body in native Vercel handler
+async function getBody(req) {
+  return new Promise((resolve) => {
+    let body = "";
+    req.on("data", (chunk) => { body += chunk.toString(); });
+    req.on("end", () => {
+      try {
+        resolve(body ? JSON.parse(body) : {});
+      } catch (e) {
+        resolve({});
+      }
+    });
+  });
+}
+
 module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -35,16 +48,19 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
-  const { pathname } = new URL(req.url, `http://${req.headers.host}`);
+  // Robust path detection
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const path = url.pathname;
 
   try {
+    const body = req.method === 'POST' ? await getBody(req) : {};
+
     // --- AI Chat ---
-    if (pathname === '/api/ai/chat' && req.method === 'POST') {
-      const { message, history } = req.body;
+    if (path === '/api/ai/chat' && req.method === 'POST') {
+      const { message, history } = body;
       const contents = [
         { role: "user", parts: [{ text: weddingContext }] },
         { role: "model", parts: [{ text: "I am Maya, ready to help! ✨" }] },
@@ -56,11 +72,15 @@ module.exports = async (req, res) => {
     }
 
     // --- RSVP Submission ---
-    if (pathname === '/api/rsvp' && req.method === 'POST') {
-      const { name, phone, attending, meal, guests, message } = req.body;
+    if (path === '/api/rsvp' && req.method === 'POST') {
+      const { name, phone, attending, meal, guests, message } = body;
+      
+      if (!prisma) throw new Error("Database client not initialized");
+
       const rsvp = await prisma.guest.create({
         data: {
-          name, phone: phone || "",
+          name: name || "Anonymous",
+          phone: phone || "",
           rsvpStatus: attending === 'yes' ? 'attending' : 'declined',
           meal: meal || "veg",
           totalGuests: parseInt(guests) || 1,
@@ -71,7 +91,7 @@ module.exports = async (req, res) => {
     }
 
     // --- Stats ---
-    if (pathname === '/api/admin/stats' && req.method === 'GET') {
+    if (path === '/api/admin/stats' && req.method === 'GET') {
       const allGuests = await prisma.guest.findMany();
       return res.status(200).json({
         total: allGuests.length,
@@ -80,9 +100,9 @@ module.exports = async (req, res) => {
       });
     }
 
-    res.status(404).json({ error: "Not Found" });
+    return res.status(404).json({ error: "Not Found", path });
   } catch (err) {
     console.error("Server Error:", err);
-    res.status(500).json({ error: "Server Error", details: err.message });
+    return res.status(500).json({ error: "Server Error", details: err.message });
   }
 };
