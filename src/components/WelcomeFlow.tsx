@@ -7,6 +7,19 @@ const GOLD = "rgba(251, 191, 36, 1)";
 const SANS = '"Montserrat", sans-serif';
 const SERIF = '"Cormorant Garamond", serif';
 
+// Haptic feedback utilities
+const triggerHaptic = (type: 'light' | 'medium' | 'heavy' = 'medium') => {
+  if (!navigator.vibrate) return;
+  
+  const patterns: Record<string, number | number[]> = {
+    light: 10,
+    medium: [20, 10, 20],
+    heavy: [30, 15, 30],
+  };
+  
+  navigator.vibrate(patterns[type]);
+};
+
 interface WelcomeFlowProps {
   onComplete: (lang: Language, team: 'groom' | 'bride') => void;
 }
@@ -28,11 +41,13 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   }, [step]);
 
   const handleLanguageSelect = (lang: Language) => {
+    triggerHaptic('light');
     setSelectedLang(lang);
     setStep('team');
   };
 
   const handleTeamSelect = (team: 'groom' | 'bride') => {
+    triggerHaptic('heavy');
     setSelectedTeam(team);
     setTimeout(() => onComplete(selectedLang, team), 800);
   };
@@ -100,6 +115,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
                 whileHover={{ y: -4, scale: 1.05 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => handleLanguageSelect(lang.id as Language)}
+                onTouchStart={() => triggerHaptic('light')}
                 style={{
                   width: 260, padding: "18px 24px", borderRadius: 14,
                   background: "linear-gradient(180deg, rgba(255,255,255,0.9), rgba(245,238,225,0.8))",
@@ -134,25 +150,31 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
             key="team"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            style={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", position: "relative", background: "linear-gradient(90deg, rgba(200,169,106,0.08) 0%, transparent 50%, rgba(200,169,106,0.08) 100%)" }}
+            style={{ position: "fixed", inset: 0, width: "100vw", height: "100vh", display: "flex", flexDirection: "row", background: "linear-gradient(135deg, rgba(200,169,106,0.15) 0%, rgba(176,122,106,0.1) 50%, rgba(200,169,106,0.15) 100%)", zIndex: 50 }}
           >
+            {/* Backdrop overlay */}
+            <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at center, rgba(0,0,0,0.2), rgba(0,0,0,0.4))", pointerEvents: "none" }} />
+            
             {/* Center prompt */}
-            <div style={{ position: "absolute", top: "16%", width: "100%", textAlign: "center", letterSpacing: selectedLang === 'kn' || selectedLang === 'hi' ? 0 : 6, wordSpacing: selectedLang === 'kn' || selectedLang === 'hi' ? "0.15em" : undefined, fontSize: 12, color: "#8C6B3B", fontFamily: SANS, fontWeight: 600, pointerEvents: "none", textTransform: "uppercase", opacity: 0.8 }}>
+            <div style={{ position: "absolute", top: "14%", left: "50%", transform: "translateX(-50%)", width: "100%", textAlign: "center", letterSpacing: selectedLang === 'kn' || selectedLang === 'hi' ? 0 : 6, wordSpacing: selectedLang === 'kn' || selectedLang === 'hi' ? "0.15em" : undefined, fontSize: 12, color: "#E8DFD0", fontFamily: SANS, fontWeight: 600, pointerEvents: "none", textTransform: "uppercase", opacity: 0.9, zIndex: 10 }}>
               {t.selectTeam}
             </div>
 
             {/* Center divider with glow */}
-            <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: "linear-gradient(to bottom, transparent, rgba(200,169,106,0.8), transparent)", boxShadow: "0 0 16px rgba(200,169,106,0.4)", opacity: 0.6, pointerEvents: "none" }} />
+            <div style={{ position: "absolute", left: "50%", top: "30%", bottom: "20%", width: 2, background: "linear-gradient(to bottom, transparent, rgba(200,169,106,0.8), transparent)", boxShadow: "0 0 20px rgba(200,169,106,0.5), 0 0 40px rgba(200,169,106,0.2)", opacity: 0.7, pointerEvents: "none", zIndex: 5 }} />
 
             {/* Left - Groom */}
             <motion.div
               whileHover={selectedTeam === null ? { scale: 1.06 } : undefined}
               onClick={() => handleTeamSelect('groom')}
+              onTouchStart={() => {
+                if (selectedTeam === null) triggerHaptic('medium');
+              }}
               animate={selectedTeam ? {
-                flex: selectedTeam === 'groom' ? 1 : 0.1,
-                opacity: selectedTeam === 'groom' ? 1 : 0,
-                scale: selectedTeam === 'groom' ? 1.15 : 0.9,
-              } : undefined}
+                flex: selectedTeam === 'groom' ? 1 : 0.08,
+                opacity: selectedTeam === 'groom' ? 1 : 0.3,
+              } : {}}
+              exit={{ opacity: 0, scale: 0.95 }}
               style={{
                 flex: 1,
                 display: "flex",
@@ -160,7 +182,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
-                transition: "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                transition: "all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                 padding: "20px",
                 position: "relative",
                 zIndex: 2,
@@ -168,6 +190,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
               data-side="left"
               onMouseEnter={(e) => {
                 if (selectedTeam !== null) return;
+                triggerHaptic('light');
                 const container = (e.currentTarget?.parentElement as HTMLDivElement);
                 if (container) {
                   const rightSide = container.querySelector('[data-side="right"]') as HTMLDivElement;
@@ -189,12 +212,39 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
                 (e.currentTarget as HTMLDivElement).style.filter = "brightness(1)";
               }}
             >
-              {/* Glow background */}
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 50%, rgba(122, 92, 46, 0.25), transparent 60%)", opacity: selectedTeam === 'groom' ? 1 : 0.7, pointerEvents: "none", borderRadius: "0", transition: "opacity 0.8s ease" }} />
+              {/* Glow background - enhanced */}
+              <motion.div 
+                animate={{ 
+                  opacity: selectedTeam === 'groom' ? 1 : 0.4,
+                  scale: selectedTeam === 'groom' ? 1 : 0.8,
+                }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 50%, rgba(122, 92, 46, 0.35), transparent 60%)", pointerEvents: "none", borderRadius: "0" }} 
+              />
               
               <motion.div
-                animate={{ y: selectedTeam === null ? [0, -8, 0] : 0 }}
-                transition={{ duration: 6, repeat: selectedTeam === null ? Infinity : 0, ease: "easeInOut" }}
+                animate={selectedTeam === 'groom' ? {
+                  y: 0,
+                  opacity: 1,
+                  scale: 1,
+                } : selectedTeam === null ? {
+                  y: [0, -8, 0],
+                  opacity: 1,
+                  scale: 1,
+                } : {
+                  y: -20,
+                  opacity: 0,
+                  scale: 0.8,
+                }}
+                transition={selectedTeam === null ? {
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                } : {
+                  duration: 0.6,
+                  delay: 0.1,
+                  ease: "easeOut",
+                }}
                 style={{
                   position: "relative",
                   zIndex: 3,
@@ -206,16 +256,29 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
                   maxWidth: "90%",
                 }}
               >
-                <div style={{ fontFamily: SANS, fontSize: "clamp(10px, 2vw, 12px)", letterSpacing: 3, textTransform: "uppercase", color: "#8C6B3B", marginBottom: 16, opacity: 0.7, fontWeight: 700, textAlign: "center" }}>
+                <motion.div 
+                  animate={selectedTeam ? {
+                    opacity: selectedTeam === 'groom' ? 1 : 0,
+                    y: selectedTeam === 'groom' ? 0 : -10,
+                  } : {}}
+                  transition={{ duration: 0.4, delay: 0.15 }}
+                  style={{ fontFamily: SANS, fontSize: "clamp(10px, 2vw, 12px)", letterSpacing: 3, textTransform: "uppercase", color: "#8C6B3B", marginBottom: 16, opacity: 0.7, fontWeight: 700, textAlign: "center" }}
+                >
                   Niteen's Side
-                </div>
-                <div
+                </motion.div>
+                <motion.div
+                  animate={selectedTeam ? {
+                    opacity: selectedTeam === 'groom' ? 1 : 0,
+                    y: selectedTeam === 'groom' ? 0 : 10,
+                    scale: selectedTeam === 'groom' ? 1 : 0.9,
+                  } : {}}
+                  transition={{ duration: 0.5, delay: 0.2 }}
                   style={{
                     fontFamily: SERIF,
                     fontSize: "clamp(20px, 5vw, 44px)",
                     fontWeight: 500,
                     color: "#6F5228",
-                    textShadow: "0 2px 10px rgba(0,0,0,0.15)",
+                    textShadow: "0 4px 20px rgba(0,0,0,0.2)",
                     letterSpacing: 1,
                     textAlign: "center",
                     maxWidth: "85%",
@@ -224,7 +287,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
                   }}
                 >
                   {t.groom}
-                </div>
+                </motion.div>
               </motion.div>
             </motion.div>
 
@@ -232,11 +295,14 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
             <motion.div
               whileHover={selectedTeam === null ? { scale: 1.06 } : undefined}
               onClick={() => handleTeamSelect('bride')}
+              onTouchStart={() => {
+                if (selectedTeam === null) triggerHaptic('medium');
+              }}
               animate={selectedTeam ? {
-                flex: selectedTeam === 'bride' ? 1 : 0.1,
-                opacity: selectedTeam === 'bride' ? 1 : 0,
-                scale: selectedTeam === 'bride' ? 1.15 : 0.9,
-              } : undefined}
+                flex: selectedTeam === 'bride' ? 1 : 0.08,
+                opacity: selectedTeam === 'bride' ? 1 : 0.3,
+              } : {}}
+              exit={{ opacity: 0, scale: 0.95 }}
               style={{
                 flex: 1,
                 display: "flex",
@@ -244,7 +310,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
-                transition: "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                transition: "all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                 padding: "20px",
                 position: "relative",
                 zIndex: 2,
@@ -252,6 +318,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
               data-side="right"
               onMouseEnter={(e) => {
                 if (selectedTeam !== null) return;
+                triggerHaptic('light');
                 const container = (e.currentTarget?.parentElement as HTMLDivElement);
                 if (container) {
                   const leftSide = container.querySelector('[data-side="left"]') as HTMLDivElement;
@@ -273,12 +340,40 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
                 (e.currentTarget as HTMLDivElement).style.filter = "brightness(1)";
               }}
             >
-              {/* Glow background */}
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 70% 50%, rgba(176, 122, 106, 0.25), transparent 60%)", opacity: selectedTeam === 'bride' ? 1 : 0.7, pointerEvents: "none", borderRadius: "0", transition: "opacity 0.8s ease" }} />
+              {/* Glow background - enhanced */}
+              <motion.div 
+                animate={{ 
+                  opacity: selectedTeam === 'bride' ? 1 : 0.4,
+                  scale: selectedTeam === 'bride' ? 1 : 0.8,
+                }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 70% 50%, rgba(176, 122, 106, 0.35), transparent 60%)", pointerEvents: "none", borderRadius: "0" }} 
+              />
               
               <motion.div
-                animate={{ y: selectedTeam === null ? [0, -8, 0] : 0 }}
-                transition={{ duration: 6, repeat: selectedTeam === null ? Infinity : 0, ease: "easeInOut", delay: 0.3 }}
+                animate={selectedTeam === 'bride' ? {
+                  y: 0,
+                  opacity: 1,
+                  scale: 1,
+                } : selectedTeam === null ? {
+                  y: [0, -8, 0],
+                  opacity: 1,
+                  scale: 1,
+                } : {
+                  y: -20,
+                  opacity: 0,
+                  scale: 0.8,
+                }}
+                transition={selectedTeam === null ? {
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.3,
+                } : {
+                  duration: 0.6,
+                  delay: 0.1,
+                  ease: "easeOut",
+                }}
                 style={{
                   position: "relative",
                   zIndex: 3,
@@ -290,16 +385,29 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
                   maxWidth: "90%",
                 }}
               >
-                <div style={{ fontFamily: SANS, fontSize: "clamp(10px, 2vw, 12px)", letterSpacing: 3, textTransform: "uppercase", color: "#8C6B3B", marginBottom: 16, opacity: 0.7, fontWeight: 700, textAlign: "center" }}>
+                <motion.div 
+                  animate={selectedTeam ? {
+                    opacity: selectedTeam === 'bride' ? 1 : 0,
+                    y: selectedTeam === 'bride' ? 0 : -10,
+                  } : {}}
+                  transition={{ duration: 0.4, delay: 0.15 }}
+                  style={{ fontFamily: SANS, fontSize: "clamp(10px, 2vw, 12px)", letterSpacing: 3, textTransform: "uppercase", color: "#8C6B3B", marginBottom: 16, opacity: 0.7, fontWeight: 700, textAlign: "center" }}
+                >
                   Apoorva's Side
-                </div>
-                <div
+                </motion.div>
+                <motion.div
+                  animate={selectedTeam ? {
+                    opacity: selectedTeam === 'bride' ? 1 : 0,
+                    y: selectedTeam === 'bride' ? 0 : 10,
+                    scale: selectedTeam === 'bride' ? 1 : 0.9,
+                  } : {}}
+                  transition={{ duration: 0.5, delay: 0.2 }}
                   style={{
                     fontFamily: SERIF,
                     fontSize: "clamp(20px, 5vw, 44px)",
                     fontWeight: 500,
                     color: "#A46A5E",
-                    textShadow: "0 2px 10px rgba(0,0,0,0.15)",
+                    textShadow: "0 4px 20px rgba(0,0,0,0.2)",
                     letterSpacing: 1,
                     textAlign: "center",
                     maxWidth: "85%",
@@ -308,7 +416,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
                   }}
                 >
                   {t.bride}
-                </div>
+                </motion.div>
               </motion.div>
             </motion.div>
           </motion.div>
