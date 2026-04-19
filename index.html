@@ -10,17 +10,17 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+Kannada:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <!-- Critical images for first load -->
-    <link rel="preload" href="/assets/frame4.png" as="image" />
-    <link rel="preload" href="/assets/ganesh-opt.png" as="image" />
+    <!-- Critical images for first load (AVIF optimized) -->
+    <link rel="preload" href="/assets/frame4-opt.avif" as="image" type="image/avif" />
+    <link rel="preload" href="/assets/ganesh-opt.avif" as="image" type="image/avif" />
     <!-- Secondary images - high priority -->
-    <link rel="preload" href="/assets/couple-photo-1-opt.jpg" as="image" />
-    <!-- Event images - defer loading -->
-    <link rel="prefetch" href="/assets/haldi.jfif" as="image" />
-    <link rel="prefetch" href="/assets/reception.jfif" as="image" />
-    <link rel="prefetch" href="/assets/marriage.jfif" as="image" />
-    <link rel="prefetch" href="/assets/bidar-reception.jfif" as="image" />
-    <link rel="prefetch" href="/assets/door.jfif" as="image" />
+    <link rel="preload" href="/assets/couple-photo-1-opt.avif" as="image" type="image/avif" />
+    <!-- Event images - defer loading (WebP fallback) -->
+    <link rel="prefetch" href="/assets/haldi-opt.avif" as="image" type="image/avif" />
+    <link rel="prefetch" href="/assets/reception-opt.avif" as="image" type="image/avif" />
+    <link rel="prefetch" href="/assets/marriage-opt.avif" as="image" type="image/avif" />
+    <link rel="prefetch" href="/assets/bidar-reception-opt.avif" as="image" type="image/avif" />
+    <link rel="prefetch" href="/assets/door-opt.avif" as="image" type="image/avif" />
     <!-- Minimal critical CSS -->
     <style>
       * { margin: 0; padding: 0; }
