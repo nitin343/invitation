@@ -27,9 +27,9 @@ import {
 
 // ─── FONTS ────────────────────────────────────────────────────────────────────
 const SERIF =
-  '"Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif';
+  '"Cormorant Garamond", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif';
 const SANS =
-  'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial';
+  '"Montserrat", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial';
 
 const TEXT_PARCHMENT = "#e8dfd0";
 const AMBER_FLAME    = "rgba(255,183,77,0.9)";
@@ -429,7 +429,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
                 </div>
                 <div style={{
                   marginTop:14, fontFamily:SANS, fontSize:"3.5vw", fontWeight:500,
-                  letterSpacing:"3px", textTransform:"uppercase", color:"#a7f3d0",
+                  letterSpacing:"1px", textTransform:"uppercase", color:"#a7f3d0",
                 }}>
                   across all that ever was
                 </div>
@@ -448,14 +448,14 @@ export default function CinematicLoveSection({ onComplete }: Props) {
                 textShadow:"0 4px 40px rgba(5,10,24,1), 0 0 60px rgba(5,10,24,0.9)",
               }}>
                 <div style={{
-                  fontFamily:SERIF, fontSize:"9vw", fontWeight:400, fontStyle:"italic",
+                  fontFamily:SERIF, fontSize:"9vw", fontWeight:400,
                   letterSpacing:"0.5px", lineHeight:1.2, color:TEXT_PARCHMENT,
                 }}>
                   …the same two souls
                 </div>
                 <div style={{
                   marginTop:14, fontFamily:SANS, fontSize:"3.5vw", fontWeight:500,
-                  letterSpacing:"3px", textTransform:"uppercase", color:"#f472b6",
+                  letterSpacing:"1px", textTransform:"uppercase", color:"#f472b6",
                 }}>
                   find their way back to each other
                 </div>
@@ -481,7 +481,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
                 </div>
                 <div style={{
                   marginTop:14, fontFamily:SANS, fontSize:"3.5vw", fontWeight:500,
-                  letterSpacing:"3px", textTransform:"uppercase", color:"#a7f3d0",
+                  letterSpacing:"1px", textTransform:"uppercase", color:"#a7f3d0",
                 }}>
                   as they always do.
                 </div>
@@ -518,7 +518,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
                 {/* Tagline */}
                 <motion.div style={{
                   marginTop:16, fontFamily:SANS, fontSize:"3.2vw", fontWeight:500,
-                  letterSpacing:"4px", textTransform:"uppercase", color:"#ffb74d",
+                  letterSpacing:"1px", textTransform:"uppercase", color:"#ffb74d",
                   opacity:tagOp,
                 }}>
                   this time… they stay.
@@ -548,7 +548,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
             onClick={onComplete}
             style={{
               fontFamily:SANS, fontSize:12, fontWeight:400,
-              letterSpacing:"3px", textTransform:"uppercase",
+              letterSpacing:"1px", textTransform:"uppercase",
               color:"rgba(232,223,208,0.45)", background:"transparent",
               border:"none", cursor:"pointer", padding:"8px 4px",
               WebkitTapHighlightColor:"transparent",
@@ -584,8 +584,8 @@ export default function CinematicLoveSection({ onComplete }: Props) {
         >
           <span style={{ fontSize: 14 }}>🔇</span>
           <span style={{
-            fontFamily: 'Inter, sans-serif',
-            fontSize: 10, letterSpacing: "3px",
+            fontFamily: '"Montserrat", sans-serif',
+            fontSize: 10, letterSpacing: "2px",
             textTransform: "uppercase",
             color: "rgba(255,183,77,0.80)",
           }}>tap to unmute</span>
@@ -616,10 +616,10 @@ export default function CinematicLoveSection({ onComplete }: Props) {
               position:"absolute", left:0, right:0, bottom:0,
               textShadow:"0 2px 22px rgba(5,10,24,1), 0 0 100px rgba(5,10,24,0.9)",
             }} transition={{ opacity:{ease:EASE_SOFT_ENTER}, y:{ease:EASE_GENTLE_EXIT} }}>
-              <div style={{ fontFamily:SERIF, fontSize:"clamp(28px,4.5vw,56px)", fontWeight:400, letterSpacing:"3px", lineHeight:1.15, whiteSpace:"nowrap" }}>
+              <div style={{ fontFamily:SERIF, fontSize:"clamp(28px,4.5vw,56px)", fontWeight:400, letterSpacing:"1px", lineHeight:1.15, whiteSpace:"nowrap" }}>
                 In every universe…
               </div>
-              <div style={{ marginTop:14, fontFamily:SANS, fontSize:"clamp(11px,1.4vw,15px)", fontWeight:400, letterSpacing:"5px", textTransform:"uppercase", color:"rgba(167,243,208,1)", whiteSpace:"nowrap" }}>
+              <div style={{ marginTop:14, fontFamily:SANS, fontSize:"clamp(11px,1.4vw,15px)", fontWeight:400, letterSpacing:"1px", textTransform:"uppercase", color:"rgba(167,243,208,1)", whiteSpace:"nowrap" }}>
                 across all that ever was
               </div>
             </motion.div>
@@ -630,10 +630,10 @@ export default function CinematicLoveSection({ onComplete }: Props) {
               position:"absolute", left:0, right:0, bottom:0,
               textShadow:"0 2px 22px rgba(5,10,24,1), 0 0 100px rgba(5,10,24,0.9)",
             }} transition={{ opacity:{ease:EASE_SOFT_ENTER}, y:{ease:EASE_GENTLE_EXIT} }}>
-              <div style={{ fontFamily:SERIF, fontSize:"clamp(28px,4.5vw,56px)", fontWeight:400, fontStyle:"italic", letterSpacing:"2px", lineHeight:1.15, whiteSpace:"nowrap" }}>
+              <div style={{ fontFamily:SERIF, fontSize:"clamp(28px,4.5vw,56px)", fontWeight:400, letterSpacing:"2px", lineHeight:1.15, whiteSpace:"nowrap" }}>
                 …the same two souls
               </div>
-              <div style={{ marginTop:14, fontFamily:SANS, fontSize:"clamp(11px,1.4vw,15px)", fontWeight:400, letterSpacing:"5px", textTransform:"uppercase", color:"rgba(236,72,153,1)", whiteSpace:"nowrap" }}>
+              <div style={{ marginTop:14, fontFamily:SANS, fontSize:"clamp(11px,1.4vw,15px)", fontWeight:400, letterSpacing:"1px", textTransform:"uppercase", color:"rgba(236,72,153,1)", whiteSpace:"nowrap" }}>
                 find their way back to each other
               </div>
             </motion.div>
@@ -644,10 +644,10 @@ export default function CinematicLoveSection({ onComplete }: Props) {
               position:"absolute", left:0, right:0, bottom:0,
               textShadow:"0 2px 22px rgba(5,10,24,1), 0 0 100px rgba(5,10,24,0.9)",
             }} transition={{ opacity:{ease:EASE_SOFT_ENTER}, y:{ease:EASE_GENTLE_EXIT} }}>
-              <div style={{ fontFamily:SERIF, fontSize:"clamp(28px,4.5vw,56px)", fontWeight:400, letterSpacing:"3px", lineHeight:1.15, whiteSpace:"nowrap" }}>
+              <div style={{ fontFamily:SERIF, fontSize:"clamp(28px,4.5vw,56px)", fontWeight:400, letterSpacing:"1px", lineHeight:1.15, whiteSpace:"nowrap" }}>
                 …and they meet again.
               </div>
-              <div style={{ marginTop:14, fontFamily:SANS, fontSize:"clamp(11px,1.4vw,15px)", fontWeight:400, letterSpacing:"5px", textTransform:"uppercase", color:"rgba(167,243,208,1)", whiteSpace:"nowrap" }}>
+              <div style={{ marginTop:14, fontFamily:SANS, fontSize:"clamp(11px,1.4vw,15px)", fontWeight:400, letterSpacing:"1px", textTransform:"uppercase", color:"rgba(167,243,208,1)", whiteSpace:"nowrap" }}>
                 as they always do.
               </div>
             </motion.div>
@@ -681,7 +681,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
               {/* Tagline */}
               <motion.div style={{
                 marginTop:22, fontFamily:SANS, fontSize:"clamp(10px,1.2vw,13px)", fontWeight:400,
-                letterSpacing:"7px", textTransform:"uppercase",
+                letterSpacing:"2px", textTransform:"uppercase",
                 color:"rgba(255,183,77,1)",
                 opacity:tagOp, y:tagY, whiteSpace:"nowrap",
               }} transition={{ ease:EASE_SOFT_ENTER }}>
@@ -711,7 +711,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
           onClick={onComplete}
           style={{
             fontFamily:SANS, fontSize:11, fontWeight:400,
-            letterSpacing:"3px", textTransform:"uppercase",
+            letterSpacing:"1px", textTransform:"uppercase",
             color:"rgba(232,223,208,0.40)", background:"transparent",
             border:"none", cursor:"pointer", padding:"6px 0",
             transition:"color 0.3s",

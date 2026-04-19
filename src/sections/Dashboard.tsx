@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const SERIF = `"Playfair Display", ui-serif, Georgia, serif`;
-const SANS  = "Inter, ui-sans-serif, system-ui, sans-serif";
+const SERIF = `"Cormorant Garamond", ui-serif, Georgia, serif`;
+const SANS  = `"Montserrat", ui-sans-serif, system-ui, sans-serif`;
 const INK   = "#050a18";
 const AMBER = "#ffb74d";
 
@@ -153,7 +153,7 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
             <span style={{ fontSize: 18 }}>✨</span>
             <span style={{ fontSize: 11, letterSpacing: 2, fontWeight: 700, color: AMBER, textTransform: "uppercase" }}>AI Sentiment Analysis</span>
           </div>
-          <div style={{ fontSize: 15, color: "rgba(232,223,208,0.9)", lineHeight: 1.6, fontStyle: "italic" }}>
+          <div style={{ fontSize: 15, color: "rgba(232,223,208,0.9)", lineHeight: 1.6 }}>
             "{aiSummary}"
           </div>
         </div>
@@ -207,7 +207,7 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
                       <a href={`tel:${rsvp.phone}`} style={{ color: AMBER, textDecoration: "none", fontSize: 13 }}>{rsvp.phone}</a>
                     </td>
                     <td style={{ ...tdStyle, maxWidth: 200 }}>
-                      <p style={{ fontSize: 12, fontStyle: "italic", opacity: 0.8, whiteSpace: "normal", wordBreak: "break-word" }}>
+                      <p style={{ fontSize: 12, opacity: 0.8, whiteSpace: "normal", wordBreak: "break-word" }}>
                         {rsvp.message ? `"${rsvp.message}"` : "-"}
                       </p>
                     </td>

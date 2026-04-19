@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-const SERIF = '"Playfair Display", serif';
-const SANS = "Inter, sans-serif";
+const SERIF = '"Cormorant Garamond", serif';
+const SANS = '"Montserrat", sans-serif';
 
 import { Language, translations } from "../i18n";
 
