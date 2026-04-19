@@ -93,7 +93,8 @@ const toggleBase: React.CSSProperties = {
   transition: "all 0.2s", background: "transparent",
 };
 
-export default function EventPage() {
+interface EventPageProps { lang?: string; team?: string; }
+export default function EventPage({ lang, team }: EventPageProps = {}) {
   const { submitRSVP, isSubmitting } = useRSVP();
   const [form, setForm] = useState({
     name: "",
@@ -145,18 +146,18 @@ export default function EventPage() {
   }, []);
 
   // Celebrations — cinematic identity cards (mood + date only)
-  const events = [
+  const events: { num: string; label: string; sub: string; date: string; day: string; accent: string; glow: string; img: string; imgH: string; imgPos: string; titleTop: boolean; cardPad: string | undefined; mapsUrl: string }[] = [
     { num: "01", label: "Haldi", sub: "A turmeric blessing ceremony", date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: "/assets/haldi.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-    { num: "02", label: "Reception", sub: "An evening of light & celebration", date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantap+Raichur" },
-    { num: "03", label: "The Wedding", sub: "Sacred vows & eternal union", date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantap+Raichur" },
+    { num: "02", label: "Reception", sub: "An evening of light & celebration", date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { num: "03", label: "The Wedding", sub: "Sacred vows & eternal union", date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
     { num: "04", label: "Bidar Reception", sub: "Celebrating with family in Bidar", date: "28 April", day: "Tuesday", accent: "rgba(251,191,36,0.55)", glow: "rgba(251,191,36,0.10)", img: "/assets/bidar-reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true, cardPad: "3px", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
   ];
 
   // Schedule — practical logistics: where, when, dress
   const schedule = [
     { date: "23 Apr", day: "Thursday", event: "Haldi Ceremony", venue: "Bidar", time: "Morning", dress: "Casual traditional", note: "Yellow & green attire welcome", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-    { date: "25 Apr", day: "Saturday", event: "Reception Night", venue: "Gunj Kalyan Mantap", time: "6:00 PM", dress: "Formal / ethnic wear", note: "Jalal Nagar, Raichur", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantap+Raichur" },
-    { date: "26 Apr", day: "Sunday", event: "Wedding Ceremony", venue: "Gunj Kalyan Mantap", time: "Morning", dress: "Traditional attire", note: "Jalal Nagar, Raichur", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantap+Raichur" },
+    { date: "25 Apr", day: "Saturday", event: "Reception Night", venue: "GMA Kalyan Mantapa", time: "6:00 PM", dress: "Formal / ethnic wear", note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { date: "26 Apr", day: "Sunday", event: "Wedding Ceremony", venue: "GMA Kalyan Mantapa", time: "Morning", dress: "Traditional attire", note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
     { date: "28 Apr", day: "Tuesday", event: "Reception — Bidar", venue: "Shree Function Hall", time: "Evening", dress: "Formal / ethnic wear", note: "Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
   ];
 
@@ -419,9 +420,9 @@ export default function EventPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
             {[
               {
-                venue: "Gunj Kalyan Mantap",
-                note: "Jalal Nagar, Raichur",
-                mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantap+Raichur",
+                venue: "Gunj Kalyan Mantapa",
+                note: "Ganj, Bidar",
+                mapsUrl: "https://maps.app.goo.gl/ggPnu7ZgtpsJsv1m6",
                 events: [
                   { date: "25 Apr", day: "Sat", name: "Reception Night", time: "6:00 PM", dress: "Formal / Ethnic" },
                   { date: "26 Apr", day: "Sun", name: "Wedding Ceremony", time: "Morning", dress: "Traditional" },
@@ -578,18 +579,33 @@ export default function EventPage() {
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
                       style={{ display: "flex", flexDirection: "column", gap: 20, overflow: "hidden" }}
                     >
-                      <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-                        <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Total Guests</span>
-                        <input
-                          type="number"
-                          min={1}
-                          value={form.guests}
-                          onChange={e => setForm(f => ({ ...f, guests: parseInt(e.target.value) || 1 }))}
-                          style={inputStyle}
-                          placeholder="Number of guests"
-                          onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
-                          onBlur={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
-                        />
+                      <div style={{ display: "flex", gap: 16, flexDirection: isMobile ? "column" : "row" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
+                          <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Total Guests</span>
+                          <input
+                            type="number"
+                            min={1}
+                            value={form.guests}
+                            onChange={e => setForm(f => ({ ...f, guests: parseInt(e.target.value) || 1 }))}
+                            style={inputStyle}
+                            placeholder="Number of guests"
+                            onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
+                            onBlur={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
+                          />
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
+                          <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Meal Preference</span>
+                          <div style={{ display: "flex", gap: 8 }}>
+                            {(["veg"] as const).map(v => (
+                              <button key={v} type="button" onClick={() => setForm(f => ({ ...f, meal: v }))} style={{
+                                ...toggleBase, flex: 1, fontSize: 9, padding: "12px 10px",
+                                borderColor: "rgba(167,243,208,0.85)",
+                                color: "rgba(167,243,208,0.90)",
+                                background: "rgba(167,243,208,0.08)",
+                              }}>Vegetarian Only</button>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </motion.div>
                   )}

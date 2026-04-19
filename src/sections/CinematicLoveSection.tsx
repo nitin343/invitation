@@ -41,7 +41,7 @@ const EASE_REVEAL      = [0.16, 1, 0.3,  1] as [number,number,number,number];
 const EASE_EMOTIONAL   = [0.33, 1, 0.68, 1] as [number,number,number,number];
 const EASE_SHARP       = [0.65, 0, 0.35, 1] as [number,number,number,number];
 
-interface Props { onComplete: () => void; }
+interface Props { onComplete: () => void; lang?: string; }
 
 // ─── DETERMINISTIC STAR LAYERS ────────────────────────────────────────────────
 interface Star { left:string; top:string; size:number; baseOpacity:number; animDelay:string; animDur:string; }

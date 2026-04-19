@@ -15,7 +15,9 @@ model Guest {
   message     String?
   totalGuests Int      @default(1)
   rsvpStatus  String   @default("attending")
-  meal        String?
+  meal        String?  @default("veg")
+  team        String?  @default("groom")
+  lang        String?  @default("en")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

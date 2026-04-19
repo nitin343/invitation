@@ -1,10 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
 const SERIF = '"Playfair Display", serif';
 const SANS = "Inter, sans-serif";
 
-export default function AIConcierge() {
+import { Language, translations } from "../i18n";
+
+interface AIConciergeProps {
+  lang?: Language;
+  team?: "groom" | "bride";
+}
+
+export default function AIConcierge({ lang = "en", team = "groom" }: AIConciergeProps) {
+  const t = translations[lang];
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: "user" | "model"; text: string }[]>([]);
   const [input, setInput] = useState("");
@@ -59,7 +66,7 @@ export default function AIConcierge() {
     }
 
     const recognition = new SpeechRecognition();
-    recognition.lang = "en-IN";
+    recognition.lang = lang === 'en' ? "en-IN" : lang === 'kn' ? "kn-IN" : "hi-IN";
     recognition.interimResults = false;
 
     recognition.onstart = () => setIsListening(true);
@@ -94,7 +101,12 @@ export default function AIConcierge() {
       const res = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMsg, history }),
+        body: JSON.stringify({ 
+          message: userMsg, 
+          history,
+          lang: lang === 'en' ? 'English' : lang === 'kn' ? 'Kannada' : 'Hindi',
+          team
+        }),
       });
 
       const data = await res.json();
@@ -236,7 +248,7 @@ export default function AIConcierge() {
                   color: "rgba(255, 255, 255, 0.3)", fontSize: 13,
                   fontFamily: SANS, lineHeight: 1.6, fontStyle: "italic"
                 }}>
-                  "Hello! I am Maya, your guide for Niteen and Apoorva's wedding. How may I assist you today?" ✨
+                  "{t.mayaGreet}" ✨
                 </div>
               )}
               {messages.map((m, i) => (
@@ -270,7 +282,7 @@ export default function AIConcierge() {
               ))}
               {isLoading && (
                 <div style={{ alignSelf: "flex-start", padding: "12px 16px", borderRadius: 16, background: "rgba(255,255,255,0.03)", color: "rgba(251, 191, 36, 0.5)", fontSize: 11, letterSpacing: 1, fontFamily: SANS }}>
-                  <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5 }}>Typing...</motion.span>
+                  <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5 }}>{t.mayaThinking}</motion.span>
                 </div>
               )}
             </div>
@@ -307,7 +319,7 @@ export default function AIConcierge() {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && handleSend()}
-                  placeholder={isListening ? "Listening..." : "Type or speak..."}
+                  placeholder={isListening ? t.listening : t.speak}
                   style={{
                     flex: 1, background: "transparent", border: "none",
                     color: "#e8dfd0", fontFamily: SANS, outline: "none",

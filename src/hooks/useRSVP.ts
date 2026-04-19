@@ -7,6 +7,8 @@ interface RSVPData {
   meal: "veg" | "nonveg" | "vegan";
   guests: number;
   message: string;
+  team?: string;
+  lang?: string;
 }
 
 const API_URL = "/api";
