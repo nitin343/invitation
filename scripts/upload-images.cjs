@@ -27,7 +27,7 @@ async function uploadImages() {
 
   for (const file of imageFiles) {
     const filePath = path.join(assetsDir, file);
-    const fileName = path.parse(file).name;
+    const fileName = path.parse(file).name.replace(/\s+/g, '_').toLowerCase();
 
     try {
       console.log(`⏳ Uploading: ${file}`);

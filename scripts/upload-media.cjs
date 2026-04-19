@@ -26,7 +26,7 @@ async function uploadMedia() {
 
   for (const file of mediaFiles) {
     const filePath = path.join(assetsDir, file);
-    const fileName = path.parse(file).name;
+    const fileName = path.parse(file).name.replace(/\s+/g, '_').toLowerCase();
 
     try {
       console.log(`⏳ Uploading: ${file}`);

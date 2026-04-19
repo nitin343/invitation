@@ -439,13 +439,13 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
                   fontFamily:SERIF, fontSize:"9vw", fontWeight:400,
                   letterSpacing:"0.5px", lineHeight:1.2, color:TEXT_PARCHMENT,
                 }}>
-                  In every universe…
+                  {t.cinema1Main}
                 </div>
                 <div style={{
                   marginTop:14, fontFamily:SANS, fontSize:"3.5vw", fontWeight:500,
                   letterSpacing:"1px", textTransform:"uppercase", color:"#E6D8B5",
                 }}>
-                  across all that ever was
+                  {t.cinema1Sub}
                 </div>
               </motion.div>
             </div>
@@ -465,13 +465,13 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
                   fontFamily:SERIF, fontSize:"9vw", fontWeight:400,
                   letterSpacing:"0.5px", lineHeight:1.2, color:TEXT_PARCHMENT,
                 }}>
-                  …the same two souls
+                  {t.cinema2Main}
                 </div>
                 <div style={{
                   marginTop:14, fontFamily:SANS, fontSize:"3.5vw", fontWeight:500,
                   letterSpacing:"1px", textTransform:"uppercase", color:"#f472b6",
                 }}>
-                  find their way back to each other
+                  {t.cinema2Sub}
                 </div>
               </motion.div>
             </div>
@@ -491,13 +491,13 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
                   fontFamily:SERIF, fontSize:"9vw", fontWeight:400,
                   letterSpacing:"0.5px", lineHeight:1.2, color:TEXT_PARCHMENT,
                 }}>
-                  …and they meet again.
+                  {t.cinema3Main}
                 </div>
                 <div style={{
                   marginTop:14, fontFamily:SANS, fontSize:"3.5vw", fontWeight:500,
                   letterSpacing:"1px", textTransform:"uppercase", color:"#E6D8B5",
                 }}>
-                  as they always do.
+                  {t.cinema3Sub}
                 </div>
               </motion.div>
             </div>
@@ -521,17 +521,17 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
                 }} />
                 {/* Names */}
                 <motion.div className="names-chromatic" style={{
-                  fontFamily:SERIF, fontSize:"10.5vw", fontWeight:500,
+                  fontFamily:SERIF, fontSize:"clamp(48px, 12vw, 120px)", fontWeight:500,
                   letterSpacing:namesSp_px, lineHeight:1.1,
                   color:TEXT_PARCHMENT, scale:heartbeat,
                 }}>
-                  Apoorva{" "}
+                  {t.brideName}{" "}
                   <span style={{ fontSize:"0.55em", verticalAlign:"middle", color:AMBER_FLAME }}>✦</span>{" "}
-                  Niteen
+                  {t.groomName}
                 </motion.div>
                 {/* Tagline */}
                 <motion.div style={{
-                  marginTop:16, fontFamily:SANS, fontSize:"3.2vw", fontWeight:500,
+                  marginTop:16, fontFamily:SANS, fontSize:"clamp(18px, 4vw, 64px)", fontWeight:500,
                   letterSpacing:"1px", textTransform:"uppercase", color:"#ffb74d",
                   opacity:tagOp,
                 }}>
@@ -631,10 +631,10 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
               textShadow:"0 2px 22px rgba(5,10,24,1), 0 0 100px rgba(5,10,24,0.9)",
             }} transition={{ opacity:{ease:EASE_SOFT_ENTER}, y:{ease:EASE_GENTLE_EXIT} }}>
               <div style={{ fontFamily:SERIF, fontSize:"clamp(28px,4.5vw,56px)", fontWeight:400, letterSpacing:"1px", lineHeight:1.15, whiteSpace:"nowrap" }}>
-                In every universe…
+                {t.cinema1Main}
               </div>
               <div style={{ marginTop:14, fontFamily:SANS, fontSize:"clamp(11px,1.4vw,15px)", fontWeight:400, letterSpacing:"1px", textTransform:"uppercase", color:"rgba(167,243,208,1)", whiteSpace:"nowrap" }}>
-                across all that ever was
+                {t.cinema1Sub}
               </div>
             </motion.div>
 
@@ -645,10 +645,10 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
               textShadow:"0 2px 22px rgba(5,10,24,1), 0 0 100px rgba(5,10,24,0.9)",
             }} transition={{ opacity:{ease:EASE_SOFT_ENTER}, y:{ease:EASE_GENTLE_EXIT} }}>
               <div style={{ fontFamily:SERIF, fontSize:"clamp(28px,4.5vw,56px)", fontWeight:400, letterSpacing:"2px", lineHeight:1.15, whiteSpace:"nowrap" }}>
-                …the same two souls
+                {t.cinema2Main}
               </div>
               <div style={{ marginTop:14, fontFamily:SANS, fontSize:"clamp(11px,1.4vw,15px)", fontWeight:400, letterSpacing:"1px", textTransform:"uppercase", color:"rgba(236,72,153,1)", whiteSpace:"nowrap" }}>
-                find their way back to each other
+                {t.cinema2Sub}
               </div>
             </motion.div>
 
@@ -659,10 +659,10 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
               textShadow:"0 2px 22px rgba(5,10,24,1), 0 0 100px rgba(5,10,24,0.9)",
             }} transition={{ opacity:{ease:EASE_SOFT_ENTER}, y:{ease:EASE_GENTLE_EXIT} }}>
               <div style={{ fontFamily:SERIF, fontSize:"clamp(28px,4.5vw,56px)", fontWeight:400, letterSpacing:"1px", lineHeight:1.15, whiteSpace:"nowrap" }}>
-                …and they meet again.
+                {t.cinema3Main}
               </div>
               <div style={{ marginTop:14, fontFamily:SANS, fontSize:"clamp(11px,1.4vw,15px)", fontWeight:400, letterSpacing:"1px", textTransform:"uppercase", color:"rgba(167,243,208,1)", whiteSpace:"nowrap" }}>
-                as they always do.
+                {t.cinema3Sub}
               </div>
             </motion.div>
 
@@ -682,19 +682,19 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
 
               {/* Names */}
               <motion.div className="names-chromatic" style={{
-                fontFamily:SERIF, fontSize:"clamp(30px,5vw,66px)", fontWeight:500,
+                fontFamily:SERIF, fontSize:"clamp(42px, 8vw, 90px)", fontWeight:500,
                 letterSpacing:namesSp_px, lineHeight:1.05,
                 whiteSpace:"nowrap", color:TEXT_PARCHMENT,
                 scale:heartbeat,
               }} transition={{ ease:EASE_EMOTIONAL }}>
-                Apoorva{" "}
+                {t.brideName}{" "}
                 <span style={{ fontSize:"0.62em", verticalAlign:"middle", color:AMBER_FLAME }}>✦</span>{" "}
-                Niteen
+                {t.groomName}
               </motion.div>
 
               {/* Tagline */}
               <motion.div style={{
-                marginTop:22, fontFamily:SANS, fontSize:"clamp(10px,1.2vw,13px)", fontWeight:400,
+                marginTop:22, fontFamily:SANS, fontSize:"clamp(14px, 2vw, 20px)", fontWeight:400,
                 letterSpacing:"2px", textTransform:"uppercase",
                 color:"rgba(255,183,77,1)",
                 opacity:tagOp, y:tagY, whiteSpace:"nowrap",

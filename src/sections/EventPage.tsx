@@ -346,12 +346,12 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
     casualTraditional: selectedLang === "en" ? "Casual traditional" : selectedLang === "kn" ? "Sarala sampradayika" : "Saadhaaran paramparik",
     haldiSub: selectedLang === "en" ? "A turmeric blessing ceremony in Bidar" : selectedLang === "kn" ? "Bidaralli haldi ashirvada samarambha" : "Bidar mein haldi ashirvad samaroh",
     receptionSub: selectedLang === "en" ? "An evening of light in Raichur" : selectedLang === "kn" ? "Raichuralli sanjeya sambhrama" : "Raichur mein shaam ka utsav",
-    marriageSub: selectedLang === "en" ? "Sacred vows at Gunj Kalyan Mantapa" : selectedLang === "kn" ? "Gunj Kalyan Mantapadalli pavitra vachana" : "Gunj Kalyan Mantapa mein pavitra vachan",
+    marriageSub: selectedLang === "en" ? "Sacred vows at Ganj Kalyan Mantapa" : selectedLang === "kn" ? "Ganj Kalyan Mantapadalli pavitra vachana" : "Ganj Kalyan Mantapa mein pavitra vachan",
     bidarReceptionSub: selectedLang === "en" ? "Celebrating with family in Bidar" : selectedLang === "kn" ? "Bidaralli kutumbada jothe sambhrama" : "Bidar mein parivaar ke saath utsav",
     handraSub: selectedLang === "en" ? "A joyful Handra celebration in Raichur" : selectedLang === "kn" ? "Raichuralli Handra sambhrama" : "Raichur mein Handra utsav",
     brideSideCelebration: selectedLang === "en" ? "Bride side celebration" : selectedLang === "kn" ? "Vadhu kadeya sambhrama" : "Vadhu paksh utsav",
     yellowGreenWelcome: selectedLang === "en" ? "Yellow & green attire welcome" : selectedLang === "kn" ? "Haladi mattu hasiru vastragalige swagata" : "Peeli aur hari poshak ka swagat hai",
-    eventVenue: selectedLang === "en" ? "26 April 2026 - Gunj Kalyan Mantapa - Raichur" : selectedLang === "kn" ? "26 April 2026 - Gunj Kalyan Mantapa - Raichur" : "26 April 2026 - Gunj Kalyan Mantapa - Raichur",
+    eventVenue: selectedLang === "en" ? "26 April 2026 - Ganj Kalyan Mantapa - Raichur" : selectedLang === "kn" ? "26 April 2026 - Ganj Kalyan Mantapa - Raichur" : "26 April 2026 - Ganj Kalyan Mantapa - Raichur",
   };
 
   const shouldTrapRsvpScroll = isMobile && isRsvpFocused && isRsvpInView && !submitted;
@@ -361,28 +361,28 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
   const celebrationEventsByTeam: Record<TeamSide, CelebrationEvent[]> = {
     groom: [
       { num: "01", label: t.haldi, sub: languageCopy.haldiSub, date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: getCDNUrl('haldi', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-      { num: "02", label: t.reception, sub: languageCopy.receptionSub, date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: getCDNUrl('reception', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
-      { num: "03", label: t.wedding, sub: languageCopy.marriageSub, date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: getCDNUrl('marriage', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { num: "02", label: t.reception, sub: languageCopy.receptionSub, date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: getCDNUrl('reception', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ganj+Kalyan+Mantapa+Raichur" },
+      { num: "03", label: t.wedding, sub: languageCopy.marriageSub, date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: getCDNUrl('marriage', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ganj+Kalyan+Mantapa+Raichur" },
       { num: "04", label: t.bidarReception, sub: languageCopy.bidarReceptionSub, date: "28 April", day: "Tuesday", accent: "rgba(251,191,36,0.55)", glow: "rgba(251,191,36,0.10)", img: getCDNUrl('bidar-reception', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true, cardPad: "3px", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Shree+Function+Hall+Bidar" },
     ],
     bride: [
       { num: "01", label: t.handra, sub: languageCopy.handraSub, date: "24 April", day: "Friday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: getCDNUrl('haldi', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Raichur" },
-      { num: "02", label: t.reception, sub: languageCopy.receptionSub, date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: getCDNUrl('reception', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
-      { num: "03", label: t.wedding, sub: languageCopy.marriageSub, date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: getCDNUrl('marriage', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { num: "02", label: t.reception, sub: languageCopy.receptionSub, date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: getCDNUrl('reception', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ganj+Kalyan+Mantapa+Raichur" },
+      { num: "03", label: t.wedding, sub: languageCopy.marriageSub, date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: getCDNUrl('marriage', { width: 600 }), imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ganj+Kalyan+Mantapa+Raichur" },
     ],
   };
 
   const scheduleEventsByTeam: Record<TeamSide, ScheduleEvent[]> = {
     groom: [
       { date: "23", month: "Apr", day: "Thu", name: t.haldi, time: languageCopy.morning, venue: languageCopy.bidar, note: languageCopy.yellowGreenWelcome, accent: "rgba(251,191,36,0.65)", dress: languageCopy.casualTraditional, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-      { date: "25", month: "Apr", day: "Sat", name: t.reception, time: languageCopy.evening, venue: "Gunj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(167,243,208,0.60)", dress: languageCopy.formalEthnic, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
-      { date: "26", month: "Apr", day: "Sun", name: t.wedding, time: languageCopy.morning, venue: "Gunj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(232,121,249,0.60)", dress: languageCopy.traditional, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { date: "25", month: "Apr", day: "Sat", name: t.reception, time: languageCopy.evening, venue: "Ganj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(167,243,208,0.60)", dress: languageCopy.formalEthnic, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ganj+Kalyan+Mantapa+Raichur" },
+      { date: "26", month: "Apr", day: "Sun", name: t.wedding, time: languageCopy.morning, venue: "Ganj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(232,121,249,0.60)", dress: languageCopy.traditional, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ganj+Kalyan+Mantapa+Raichur" },
       { date: "28", month: "Apr", day: "Tue", name: t.reception, time: languageCopy.evening, venue: "Shree Function Hall", note: languageCopy.bidar, accent: "rgba(251,191,36,0.55)", dress: languageCopy.formalEthnic, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Shree+Function+Hall+Bidar" },
     ],
     bride: [
       { date: "24", month: "Apr", day: "Fri", name: t.handra, time: languageCopy.morning, venue: languageCopy.raichur, note: languageCopy.brideSideCelebration, accent: "rgba(251,191,36,0.65)", dress: languageCopy.traditional, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Raichur" },
-      { date: "25", month: "Apr", day: "Sat", name: t.reception, time: languageCopy.evening, venue: "Gunj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(167,243,208,0.60)", dress: languageCopy.formalEthnic, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
-      { date: "26", month: "Apr", day: "Sun", name: t.wedding, time: languageCopy.morning, venue: "Gunj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(232,121,249,0.60)", dress: languageCopy.traditional, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gunj+Kalyan+Mantapa+Raichur" },
+      { date: "25", month: "Apr", day: "Sat", name: t.reception, time: languageCopy.evening, venue: "Ganj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(167,243,208,0.60)", dress: languageCopy.formalEthnic, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ganj+Kalyan+Mantapa+Raichur" },
+      { date: "26", month: "Apr", day: "Sun", name: t.wedding, time: languageCopy.morning, venue: "Ganj Kalyan Mantapa", note: languageCopy.raichur, accent: "rgba(232,121,249,0.60)", dress: languageCopy.traditional, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Ganj+Kalyan+Mantapa+Raichur" },
     ],
   };
 
@@ -998,11 +998,11 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
             Apoorva <span style={{ color: `${GOLD_EVENT}52`, fontSize: "0.55em", verticalAlign: "middle" }}>*</span> Niteen
           </motion.div>
           <motion.div variants={fadeIn} style={{
-            marginTop: SPACE.lg, fontFamily: SANS, fontSize: 9, letterSpacing: "2px",
+            marginTop: SPACE.lg, fontFamily: SANS, fontSize: "clamp(16px, 2.5vw, 32px)", letterSpacing: "2px",
             textTransform: "uppercase" as const, color: `${TEXT_CREAM}33`,
           }}>{t.foreverAlways}</motion.div>
           <motion.div variants={fadeIn} style={{
-            marginTop: SPACE.xl, fontFamily: SANS, fontSize: 9, letterSpacing: "2px",
+            marginTop: SPACE.xl, fontFamily: SANS, fontSize: "clamp(14px, 2vw, 28px)", letterSpacing: "2px",
             textTransform: "uppercase" as const, color: `${GOLD_EVENT}38`,
           }}>{languageCopy.eventVenue}</motion.div>
         </motion.div>
