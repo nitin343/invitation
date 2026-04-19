@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize Prisma
 let prisma;
@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'production') {
   prisma = global.prisma;
 }
 
-const ai = new GoogleGenAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const weddingContext = (lang, team) => `
 You are Maya, the AI Wedding Concierge for Niteen and Apoorva's wedding.
@@ -73,19 +73,34 @@ export default async function handler(req, res) {
 
     // --- AI Chat ---
     if (path === '/api/ai/chat' && req.method === 'POST') {
-      const { message, history, lang, team } = body;
-      const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
-      
-      const chat = model.startChat({
-        history: [
-          { role: "user", parts: [{ text: weddingContext(lang, team) }] },
-          { role: "model", parts: [{ text: "Ready to assist! ✨" }] },
-          ...(history || []).map(h => ({ role: h.role === "model" ? "model" : "user", parts: h.parts }))
-        ]
-      });
+      if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ success: false, error: "Gemini API key not configured" });
+      }
 
-      const result = await chat.sendMessage(message);
-      return res.status(200).json({ text: result.response.text() });
+      const { message, history, lang, team } = body;
+      
+      if (!message || typeof message !== 'string') {
+        return res.status(400).json({ success: false, error: "Message is required" });
+      }
+
+      try {
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        
+        const chat = model.startChat({
+          history: [
+            { role: "user", parts: [{ text: weddingContext(lang, team) }] },
+            { role: "model", parts: [{ text: "Ready to assist! ✨" }] },
+            ...(history || []).map(h => ({ role: h.role === "model" ? "model" : "user", parts: [{ text: h.parts[0]?.text || "" }] }))
+          ]
+        });
+
+        const result = await chat.sendMessage(message);
+        const responseText = result.response.text();
+        return res.status(200).json({ success: true, text: responseText });
+      } catch (aiError) {
+        console.error("AI Chat Error:", aiError.message);
+        return res.status(500).json({ success: false, error: "AI service error", details: aiError.message });
+      }
     }
 
     // --- RSVP Submission ---
