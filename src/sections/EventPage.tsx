@@ -3,10 +3,10 @@ import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import { useRSVP } from "../hooks/useRSVP";
 
 const SERIF = '"Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif';
-const SANS  = "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
+const SANS = "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
 const PARCHMENT = "#e8dfd0";
-const AMBER     = "rgba(255,183,77,0.9)";
-const INK       = "#050a18";
+const AMBER = "rgba(255,183,77,0.9)";
+const INK = "#050a18";
 
 const Rule = () => (
   <div style={{
@@ -36,15 +36,15 @@ const Eyebrow = ({ children }: { children: React.ReactNode }) => (
 
 const staggerParent = {
   hidden: {},
-  show:   { transition: { staggerChildren: 0.13, delayChildren: 0.1 } },
+  show: { transition: { staggerChildren: 0.13, delayChildren: 0.1 } },
 };
 const fadeSlide = {
   hidden: { opacity: 0, y: 36 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const } },
 };
 const fadeIn = {
   hidden: { opacity: 0 },
-  show:   { opacity: 1, transition: { duration: 1.1, ease: "easeOut" as const } },
+  show: { opacity: 1, transition: { duration: 1.1, ease: "easeOut" as const } },
 };
 
 function SnapSection({ children, bg = INK, style }: {
@@ -95,11 +95,11 @@ const toggleBase: React.CSSProperties = {
 
 export default function EventPage() {
   const { submitRSVP, isSubmitting } = useRSVP();
-  const [form, setForm] = useState({ 
-    name: "", 
-    phone: "", 
-    attending: "yes" as "yes"|"no", 
-    meal: "veg" as "veg"|"nonveg"|"vegan",
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    attending: "yes" as "yes" | "no",
+    meal: "veg" as "veg" | "nonveg" | "vegan",
     guests: 1,
     message: ""
   });
@@ -146,18 +146,18 @@ export default function EventPage() {
 
   // Celebrations — cinematic identity cards (mood + date only)
   const events = [
-    { num: "01", label: "Haldi",           sub: "A turmeric blessing ceremony",      date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)",  glow: "rgba(251,191,36,0.12)",  img: "/assets/haldi.jfif",            imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-    { num: "02", label: "Reception",       sub: "An evening of light & celebration",  date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif",        imgH: "clamp(170px,28vh,240px)", imgPos: "top",    titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
-    { num: "03", label: "The Wedding",     sub: "Sacred vows & eternal union",        date: "26 April", day: "Sunday",   accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif",          imgH: "clamp(170px,28vh,240px)", imgPos: "top",    titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
-    { num: "04", label: "Bidar Reception", sub: "Celebrating with family in Bidar",  date: "28 April", day: "Tuesday",  accent: "rgba(251,191,36,0.55)",  glow: "rgba(251,191,36,0.10)",  img: "/assets/bidar-reception.jfif",  imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true,  cardPad: "3px", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
+    { num: "01", label: "Haldi", sub: "A turmeric blessing ceremony", date: "23 April", day: "Thursday", accent: "rgba(251,191,36,0.65)", glow: "rgba(251,191,36,0.12)", img: "/assets/haldi.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
+    { num: "02", label: "Reception", sub: "An evening of light & celebration", date: "25 April", day: "Saturday", accent: "rgba(167,243,208,0.60)", glow: "rgba(167,243,208,0.10)", img: "/assets/reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { num: "03", label: "The Wedding", sub: "Sacred vows & eternal union", date: "26 April", day: "Sunday", accent: "rgba(232,121,249,0.60)", glow: "rgba(232,121,249,0.10)", img: "/assets/marriage.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "top", titleTop: false, cardPad: undefined, mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { num: "04", label: "Bidar Reception", sub: "Celebrating with family in Bidar", date: "28 April", day: "Tuesday", accent: "rgba(251,191,36,0.55)", glow: "rgba(251,191,36,0.10)", img: "/assets/bidar-reception.jfif", imgH: "clamp(170px,28vh,240px)", imgPos: "center", titleTop: true, cardPad: "3px", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
   ];
 
   // Schedule — practical logistics: where, when, dress
   const schedule = [
-    { date: "23 Apr", day: "Thursday", event: "Haldi Ceremony",    venue: "Bidar",               time: "Morning",  dress: "Casual traditional",   note: "Yellow & green attire welcome", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
-    { date: "25 Apr", day: "Saturday", event: "Reception Night",    venue: "GMA Kalyan Mantapa",  time: "6:00 PM",  dress: "Formal / ethnic wear",  note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
-    { date: "26 Apr", day: "Sunday",   event: "Wedding Ceremony",   venue: "GMA Kalyan Mantapa",  time: "Morning",  dress: "Traditional attire",    note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
-    { date: "28 Apr", day: "Tuesday",  event: "Reception — Bidar",  venue: "Shree Function Hall", time: "Evening",  dress: "Formal / ethnic wear",  note: "Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
+    { date: "23 Apr", day: "Thursday", event: "Haldi Ceremony", venue: "Bidar", time: "Morning", dress: "Casual traditional", note: "Yellow & green attire welcome", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar" },
+    { date: "25 Apr", day: "Saturday", event: "Reception Night", venue: "GMA Kalyan Mantapa", time: "6:00 PM", dress: "Formal / ethnic wear", note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { date: "26 Apr", day: "Sunday", event: "Wedding Ceremony", venue: "GMA Kalyan Mantapa", time: "Morning", dress: "Traditional attire", note: "Ganj, Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=GMA+Kalyan+Mantapa+Bidar" },
+    { date: "28 Apr", day: "Tuesday", event: "Reception — Bidar", venue: "Shree Function Hall", time: "Evening", dress: "Formal / ethnic wear", note: "Bidar", mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar" },
   ];
 
   return (
@@ -172,13 +172,15 @@ export default function EventPage() {
     >
       {/* HERO */}
       <SnapSection bg={INK}>
-        <ParallaxBg 
-          src="/assets/couple-photo-1-opt.jpg" 
-          scrollRef={scrollRef} 
+        <ParallaxBg
+          src="/assets/couple-photo-1-opt.jpg"
+          scrollRef={scrollRef}
           filter="blur(26px) brightness(0.62) saturate(0.75) contrast(1.1)"
         />
-        <div style={{ position: "absolute", inset: 0, zIndex: 1,
-          background: "radial-gradient(circle at center, rgba(5,10,24,0.3) 0%, rgba(5,10,24,0.85) 100%), linear-gradient(to bottom,rgba(5,10,24,0.40) 0%,rgba(5,10,24,0.05) 35%,rgba(5,10,24,0.15) 55%,rgba(5,10,24,0.96) 100%)" }} />
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 1,
+          background: "radial-gradient(circle at center, rgba(5,10,24,0.3) 0%, rgba(5,10,24,0.85) 100%), linear-gradient(to bottom,rgba(5,10,24,0.40) 0%,rgba(5,10,24,0.05) 35%,rgba(5,10,24,0.15) 55%,rgba(5,10,24,0.96) 100%)"
+        }} />
         <motion.div
           variants={staggerParent} initial="hidden" animate="show"
           style={{
@@ -299,7 +301,7 @@ export default function EventPage() {
                   backdropFilter: "blur(14px)",
                   transition: "transform 0.4s,box-shadow 0.4s",
                   overflow: "hidden",
-                  display: "flex", 
+                  display: "flex",
                   flexDirection: isMobile ? "column" : "row",
                   alignItems: "stretch",
                   flex: isMobile ? "0 0 82vw" : "1",
@@ -414,61 +416,80 @@ export default function EventPage() {
             <Eyebrow>Where & When</Eyebrow><Rule />
           </motion.div>
 
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {schedule.map(({ date, day, event, venue, time, dress, note, mapsUrl }, i, arr) => (
+          <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+            {[
+              {
+                venue: "Gunj Kalyan Mantapa",
+                note: "Ganj, Bidar",
+                mapsUrl: "https://maps.app.goo.gl/ggPnu7ZgtpsJsv1m6",
+                events: [
+                  { date: "25 Apr", day: "Sat", name: "Reception Night", time: "6:00 PM", dress: "Formal / Ethnic" },
+                  { date: "26 Apr", day: "Sun", name: "Wedding Ceremony", time: "Morning", dress: "Traditional" },
+                ]
+              },
+              {
+                venue: "Shree Function Hall",
+                note: "Bidar",
+                mapsUrl: "https://www.google.com/maps/search/?api=1&query=Sri+Function+Hall+Bidar",
+                events: [
+                  { date: "28 Apr", day: "Tue", name: "Reception — Bidar", time: "Evening", dress: "Formal / Ethnic" }
+                ]
+              },
+              {
+                venue: "Bidar",
+                note: "Haldi Venue",
+                mapsUrl: "https://www.google.com/maps/search/?api=1&query=Bidar",
+                events: [
+                  { date: "23 Apr", day: "Thu", name: "Haldi Ceremony", time: "Morning", dress: "Casual Traditional" }
+                ]
+              }
+            ].map((v, i) => (
               <motion.div key={i} variants={fadeSlide} style={{
-                display: "grid",
-                gridTemplateColumns: "clamp(50px,13vw,68px) 1px 1fr",
-                gap: `0 clamp(14px,3vw,22px)`,
-                padding: "clamp(14px,2.2vh,20px) 0",
-                borderBottom: i < arr.length - 1 ? "1px solid rgba(255,183,77,0.08)" : "none",
-                alignItems: "start",
+                background: "rgba(255,255,255,0.02)", borderRadius: 20, padding: 24,
+                border: "1px solid rgba(255,183,77,0.1)", position: "relative"
               }}>
-                {/* Date column */}
-                <div style={{ textAlign: "right", paddingTop: 3 }}>
-                  <div style={{ fontFamily: SERIF, fontSize: "clamp(14px,3vw,17px)", color: "rgba(255,183,77,0.90)", fontWeight: 600, lineHeight: 1 }}>{date}</div>
-                  <div style={{ fontFamily: SANS, fontSize: "clamp(7px,1.5vw,9px)", letterSpacing: "2px", color: "rgba(255,183,77,0.42)", textTransform: "uppercase" as const, marginTop: 5 }}>{day}</div>
+                {/* Venue Header */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+                  <div>
+                    <div style={{ fontFamily: SANS, fontSize: 9, letterSpacing: 3, color: "rgba(167,243,208,0.5)", textTransform: "uppercase" }}>Venue</div>
+                    <div style={{ fontFamily: SERIF, fontSize: 18, color: PARCHMENT, fontWeight: 600, marginTop: 4 }}>{v.venue}</div>
+                    <div style={{ fontFamily: SANS, fontSize: 11, color: "rgba(232,223,208,0.5)", marginTop: 2 }}>{v.note}</div>
+                  </div>
+                  <motion.a
+                    href={v.mapsUrl} target="_blank" rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.05)" }}
+                    whileTap={{ scale: 0.9 }}
+                    style={{
+                      borderRadius: 12, padding: 8, display: "flex", alignItems: "center", justifyContent: "center",
+                      transition: "background-color 0.3s", cursor: "pointer"
+                    }}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#EA4335" />
+                    </svg>
+                  </motion.a>
                 </div>
 
-                {/* Spine line */}
-                <div style={{ background: "rgba(255,183,77,0.14)", alignSelf: "stretch" }} />
-
-                {/* Details */}
-                <div style={{ paddingTop: 2 }}>
-                  <div style={{ fontFamily: SERIF, fontSize: "clamp(14px,3vw,17px)", fontWeight: 600, color: PARCHMENT, marginBottom: 8, lineHeight: 1.2 }}>{event}</div>
-
-                  <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "4px 12px", alignItems: "center" }}>
-                    <span style={{ fontFamily: SANS, fontSize: "clamp(9px,1.8vw,10px)", letterSpacing: "2px", color: "rgba(167,243,208,0.55)", textTransform: "uppercase" as const }}>venue</span>
-                    <span style={{ fontFamily: SANS, fontSize: "clamp(11px,2vw,12px)", color: "rgba(232,223,208,0.68)" }}>{venue}</span>
-                    <motion.a 
-                      href={mapsUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      whileTap={{ scale: 0.94 }}
-                      onClick={() => { if(window.navigator.vibrate) window.navigator.vibrate(10); }}
-                      variants={pulseGlow}
-                      animate="animate"
-                      style={{
-                        display: "flex", alignItems: "center", gap: 4, textDecoration: "none",
-                        color: "rgba(255,183,77,0.95)", fontSize: 10, letterSpacing: 1, fontWeight: 600,
-                        background: "rgba(255,183,77,0.12)", padding: "4px 10px", borderRadius: 4,
-                        border: "1px solid rgba(255,183,77,0.25)",
-                        marginLeft: 8
-                      }}
-                    >
-                      <span style={{ fontSize: 12 }}>📍</span> OPEN MAPS
-                    </motion.a>
-                  </div>
-
-                  <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "4px 12px", marginTop: 4 }}>
-                    <span style={{ fontFamily: SANS, fontSize: "clamp(9px,1.8vw,10px)", letterSpacing: "2px", color: "rgba(255,183,77,0.45)", textTransform: "uppercase" as const }}>time</span>
-                    <span style={{ fontFamily: SANS, fontSize: "clamp(11px,2vw,12px)", color: "rgba(255,183,77,0.78)" }}>{time} · {note}</span>
-                  </div>
-
-                  <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "4px 12px", marginTop: 4 }}>
-                    <span style={{ fontFamily: SANS, fontSize: "clamp(9px,1.8vw,10px)", letterSpacing: "2px", color: "rgba(232,121,249,0.50)", textTransform: "uppercase" as const }}>dress</span>
-                    <span style={{ fontFamily: SANS, fontSize: "clamp(11px,2vw,12px)", color: "rgba(232,223,208,0.45)", fontStyle: "italic" }}>{dress}</span>
-                  </div>
+                {/* Events at this venue */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  {v.events.map((e, idx) => (
+                    <div key={idx} style={{
+                      display: "flex", gap: 16, paddingLeft: 8,
+                      borderLeft: "1px solid rgba(255,183,77,0.2)",
+                      position: "relative"
+                    }}>
+                      <div style={{ flexShrink: 0, width: 45 }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: AMBER }}>{e.date}</div>
+                        <div style={{ fontSize: 9, color: "rgba(255,183,77,0.4)", textTransform: "uppercase" }}>{e.day}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{e.name}</div>
+                        <div style={{ fontSize: 11, color: "rgba(232,223,208,0.6)", marginTop: 2 }}>
+                          {e.time} · <span style={{ fontStyle: "italic", opacity: 0.7 }}>{e.dress}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </motion.div>
             ))}
@@ -501,8 +522,8 @@ export default function EventPage() {
           <AnimatePresence mode="wait">
             {!submitted ? (
               <motion.form key="form" initial={{ opacity: 1 }} exit={{ opacity: 0, y: -14, transition: { duration: 0.3 } }}
-                onSubmit={async (e) => { 
-                  e.preventDefault(); 
+                onSubmit={async (e) => {
+                  e.preventDefault();
                   setError(null);
                   const res = await submitRSVP(form);
                   if (res.success) {
@@ -521,7 +542,7 @@ export default function EventPage() {
                       onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                       placeholder="Full name" style={inputStyle}
                       onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
-                      onBlur ={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
+                      onBlur={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
                     />
                   </motion.label>
                   <motion.label variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
@@ -530,7 +551,7 @@ export default function EventPage() {
                       onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                       placeholder="+91..." style={inputStyle}
                       onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
-                      onBlur ={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
+                      onBlur={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
                     />
                   </motion.label>
                 </div>
@@ -539,13 +560,13 @@ export default function EventPage() {
                 <motion.div variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: 9 }}>
                   <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Will you be attending?</span>
                   <div style={{ display: "flex", gap: 12 }}>
-                    {(["yes","no"] as const).map(v => (
+                    {(["yes", "no"] as const).map(v => (
                       <button key={v} type="button" onClick={() => setForm(f => ({ ...f, attending: v }))} style={{
                         ...toggleBase, flex: 1, padding: "12px 16px",
                         lineHeight: 1.4,
                         borderColor: form.attending === v ? "rgba(255,183,77,0.85)" : "rgba(255,183,77,0.14)",
-                        color:       form.attending === v ? AMBER : "rgba(232,223,208,0.38)",
-                        background:  form.attending === v ? "rgba(255,183,77,0.08)" : "transparent",
+                        color: form.attending === v ? AMBER : "rgba(232,223,208,0.38)",
+                        background: form.attending === v ? "rgba(255,183,77,0.08)" : "transparent",
                       }}>{v === "yes" ? "Joyfully accept" : "Regretfully decline"}</button>
                     ))}
                   </div>
@@ -560,7 +581,7 @@ export default function EventPage() {
                       <div style={{ display: "flex", gap: 16, flexDirection: isMobile ? "column" : "row" }}>
                         <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
                           <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Total Guests</span>
-                          <input 
+                          <input
                             type="number"
                             min={1}
                             value={form.guests}
@@ -568,7 +589,7 @@ export default function EventPage() {
                             style={inputStyle}
                             placeholder="Number of guests"
                             onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
-                            onBlur ={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
+                            onBlur={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
                           />
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
@@ -578,8 +599,8 @@ export default function EventPage() {
                               <button key={v} type="button" onClick={() => setForm(f => ({ ...f, meal: v }))} style={{
                                 ...toggleBase, flex: 1, fontSize: 9, padding: "12px 10px",
                                 borderColor: "rgba(167,243,208,0.85)",
-                                color:       "rgba(167,243,208,0.90)",
-                                background:  "rgba(167,243,208,0.08)",
+                                color: "rgba(167,243,208,0.90)",
+                                background: "rgba(167,243,208,0.08)",
                               }}>Vegetarian Only</button>
                             ))}
                           </div>
@@ -593,26 +614,26 @@ export default function EventPage() {
                 <motion.label variants={fadeSlide} style={{ display: "flex", flexDirection: "column", gap: 9 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Personal Message</span>
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={generateAIWish}
                       disabled={!form.name || isGeneratingWish}
                       style={{
-                        background: "transparent", border: "none", color: AMBER, 
-                        fontSize: 10, cursor: form.name ? "pointer" : "default", 
+                        background: "transparent", border: "none", color: AMBER,
+                        fontSize: 10, cursor: form.name ? "pointer" : "default",
                         opacity: form.name ? 1 : 0.3, display: "flex", alignItems: "center", gap: 4
                       }}
                     >
                       {isGeneratingWish ? "Writing..." : "✨ AI Help"}
                     </button>
                   </div>
-                  <textarea 
+                  <textarea
                     value={form.message}
                     onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
                     placeholder={form.name ? "Write something or use AI help..." : "Please enter your name first for AI help..."}
                     style={{ ...inputStyle, minHeight: 100, resize: "none", padding: "14px 18px" }}
                     onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
-                    onBlur ={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
+                    onBlur={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
                   />
                 </motion.label>
 

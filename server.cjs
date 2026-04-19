@@ -7,6 +7,8 @@ require('dotenv').config();
 const app = express();
 const prisma = new PrismaClient();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+// Force v1 for stability if needed, though SDK usually handles it. 
+// We will try to re-initialize or use a different model string.
 const PORT = process.env.PORT || 5000;
 
 // --- AI Context ---
@@ -26,25 +28,42 @@ Keep answers concise and elegant.
 app.use(cors());
 app.use(express.json());
 
-// --- AI Chat Endpoint ---
+// --- AI Chat Endpoint with SDK ---
 app.post('/api/ai/chat', async (req, res) => {
   try {
     const { message, history } = req.body;
+    
+    // Use the SDK for chat to handle history and context better
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+    // Format history for the SDK
     const chat = model.startChat({
       history: [
         { role: "user", parts: [{ text: weddingContext }] },
-        { role: "model", parts: [{ text: "I am ready to assist your guests as their Wedding Concierge!" }] },
-        ...(history || [])
+        { role: "model", parts: [{ text: "I am ready to assist! I will be warm, polite, and use emojis. ✨" }] },
+        ...(history || []).map(h => ({
+          role: h.role === "model" ? "model" : "user",
+          parts: h.parts
+        }))
       ]
     });
 
     const result = await chat.sendMessage(message);
-    const response = await result.response;
-    res.json({ text: response.text() });
+    const responseText = result.response.text();
+    
+    res.json({ text: responseText });
   } catch (err) {
-    console.error('AI Chat Error:', err);
-    res.status(500).json({ error: 'AI is resting right now. Please try again later.' });
+    console.error("AI SDK Error:", err.message);
+    
+    // Check if the error is related to the API key being leaked/invalid
+    if (err.message.includes("leaked") || err.message.includes("API key")) {
+        res.status(500).json({ 
+            error: "The API Key appears to be invalid or deactivated. Please check your .env file! 🛠️",
+            details: "Google has flagged this key as leaked. You need a fresh key from AI Studio."
+        });
+    } else {
+        res.status(500).json({ error: "The Concierge is finishing a quick break. Try again in 10 seconds! ✨" });
+    }
   }
 });
 
@@ -58,7 +77,8 @@ app.post('/api/ai/generate-wish', async (req, res) => {
     const result = await model.generateContent(prompt);
     res.json({ wish: result.response.text() });
   } catch (err) {
-    res.status(500).json({ error: 'AI is feeling shy.' });
+    console.error('Wish Gen Error:', err.message);
+    res.status(500).json({ error: 'AI is taking a creative break.' });
   }
 });
 
@@ -70,7 +90,7 @@ app.get('/api/admin/ai-analysis', async (req, res) => {
     
     if (!messages) return res.json({ summary: "No messages to analyze yet!" });
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
     const prompt = `Analyze these wedding guest messages and provide a 2-sentence summary of the overall vibe and any special requests or common themes: \n${messages}`;
     
     const result = await model.generateContent(prompt);
