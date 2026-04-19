@@ -316,7 +316,7 @@ export default function AIConcierge() {
                 />
                 <motion.button
                   whileTap={{ scale: 0.95 }}
-                  onClick={handleSend}
+                  onClick={() => handleSend()}
                   disabled={!input.trim()}
                   style={{
                     background: "rgba(251, 191, 36, 0.25)",
