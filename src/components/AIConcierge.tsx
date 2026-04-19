@@ -26,7 +26,7 @@ export default function AIConcierge() {
     const handleClickOutside = (event: MouseEvent) => {
       const isOutsideChat = containerRef.current && !containerRef.current.contains(event.target as Node);
       const isOutsideButton = buttonRef.current && !buttonRef.current.contains(event.target as Node);
-      
+
       if (isOutsideChat && isOutsideButton) {
         setIsOpen(false);
       }
@@ -116,8 +116,8 @@ export default function AIConcierge() {
         onClick={() => setIsOpen(!isOpen)}
         style={{
           position: "fixed", bottom: 24, right: 24, zIndex: 1000,
-          width: 44, height: 44, 
-          background: "transparent", border: "none", cursor: "pointer", 
+          width: 44, height: 44,
+          background: "transparent", border: "none", cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",
           padding: 0, outline: "none", boxShadow: "none",
           appearance: "none", WebkitTapHighlightColor: "transparent"
@@ -132,10 +132,10 @@ export default function AIConcierge() {
               exit={{ opacity: 0, scale: 0.8 }}
               style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
             >
-              <img 
-                src="/assets/gemini.png" 
-                alt="Gemini" 
-                style={{ width: 36, height: 36, objectFit: "contain", pointerEvents: "none" }} 
+              <img
+                src="/assets/gemini.png"
+                alt="Gemini"
+                style={{ width: 36, height: 36, objectFit: "contain", pointerEvents: "none" }}
               />
             </motion.div>
           ) : (
@@ -144,8 +144,8 @@ export default function AIConcierge() {
               initial={{ opacity: 0, rotate: -90 }}
               animate={{ opacity: 1, rotate: 0 }}
               exit={{ opacity: 0, rotate: 90 }}
-              style={{ 
-                width: 36, height: 36, borderRadius: "50%", 
+              style={{
+                width: 36, height: 36, borderRadius: "50%",
                 background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 color: "#fff", fontSize: 20, border: "1px solid rgba(255,255,255,0.15)",
@@ -170,9 +170,9 @@ export default function AIConcierge() {
             style={{
               position: "fixed", bottom: 100, right: 24, zIndex: 1000,
               width: "min(380px, 90vw)", height: "min(560px, 75vh)",
-              background: "rgba(10, 15, 30, 0.85)", 
+              background: "rgba(10, 15, 30, 0.85)",
               backdropFilter: "blur(24px) saturate(180%)",
-              border: "1px solid rgba(251, 191, 36, 0.15)", 
+              border: "1px solid rgba(251, 191, 36, 0.15)",
               borderRadius: 32,
               boxShadow: `
                 0 0 0 1px rgba(255, 255, 255, 0.05) inset,
@@ -186,23 +186,23 @@ export default function AIConcierge() {
           >
             {/* Header */}
             <div style={{
-              padding: "24px 28px", 
+              padding: "24px 28px",
               borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
               background: "linear-gradient(to bottom, rgba(251, 191, 36, 0.08), transparent)",
               display: "flex", alignItems: "center", gap: 16
             }}>
-              <div style={{ 
-                width: 44, height: 44, borderRadius: 14, 
-                background: "rgba(5, 10, 24, 0.4)", 
+              <div style={{
+                width: 44, height: 44, borderRadius: 14,
+                background: "rgba(5, 10, 24, 0.4)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
                 border: "1px solid rgba(251, 191, 36, 0.3)",
                 color: "#fbbf24"
               }}>
-                <img 
-                  src="/assets/gemini.png" 
-                  alt="Gemini" 
-                  style={{ width: 32, height: 32, objectFit: "contain" }} 
+                <img
+                  src="/assets/gemini.png"
+                  alt="Gemini"
+                  style={{ width: 32, height: 32, objectFit: "contain" }}
                 />
               </div>
               <div style={{ flex: 1 }}>
@@ -225,15 +225,15 @@ export default function AIConcierge() {
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} style={{ 
-              flex: 1, overflowY: "auto", padding: "24px 24px 12px", 
+            <div ref={scrollRef} style={{
+              flex: 1, overflowY: "auto", padding: "24px 24px 12px",
               display: "flex", flexDirection: "column", gap: 20,
               scrollbarWidth: "none"
             }}>
               {messages.length === 0 && (
-                <div style={{ 
-                  textAlign: "center", padding: "60px 30px", 
-                  color: "rgba(255, 255, 255, 0.3)", fontSize: 13, 
+                <div style={{
+                  textAlign: "center", padding: "60px 30px",
+                  color: "rgba(255, 255, 255, 0.3)", fontSize: 13,
                   fontFamily: SANS, lineHeight: 1.6, fontStyle: "italic"
                 }}>
                   "Hello! I am Maya, your guide for Niteen and Apoorva's wedding. How may I assist you today?" ✨
@@ -276,25 +276,27 @@ export default function AIConcierge() {
             </div>
 
             {/* Input Container */}
-            <div style={{ padding: "20px 24px 28px" }}>
-              <div style={{ 
-                display: "flex", gap: 12, alignItems: "center",
-                background: "rgba(255, 255, 255, 0.03)", 
-                border: "1px solid rgba(255, 255, 255, 0.07)",
-                borderRadius: 20, padding: "6px 6px 6px 12px",
-                boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.2)"
+            <div style={{ padding: "0 24px 28px" }}>
+              <div style={{
+                display: "flex", alignItems: "center",
+                background: "rgba(13, 27, 62, 0.6)",
+                border: "1px solid rgba(251, 191, 36, 0.2)",
+                borderRadius: 6, padding: "2px 2px 2px 20px",
+                width: "100%", boxSizing: "border-box",
+                height: 56
               }}>
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={handleVoiceInput}
                   style={{
-                    background: isListening ? "#ef4444" : "transparent",
-                    border: "none", padding: 8, borderRadius: 12, cursor: "pointer",
-                    color: isListening ? "#fff" : "rgba(255,255,255,0.4)",
-                    display: "flex", alignItems: "center", justifyContent: "center"
+                    background: isListening ? "rgba(239, 68, 68, 0.2)" : "transparent",
+                    border: "none", padding: 0, cursor: "pointer",
+                    color: isListening ? "#ef4444" : "#fbbf24",
+                    display: "flex", alignItems: "center",
+                    marginRight: 16
                   }}
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
                     <line x1="12" y1="19" x2="12" y2="23"></line>
@@ -308,23 +310,40 @@ export default function AIConcierge() {
                   placeholder={isListening ? "Listening..." : "Type or speak..."}
                   style={{
                     flex: 1, background: "transparent", border: "none",
-                    color: "#fff", fontFamily: SANS, outline: "none",
-                    fontSize: 14
+                    color: "#e8dfd0", fontFamily: SANS, outline: "none",
+                    fontSize: 15, height: "100%"
                   }}
                 />
                 <motion.button
-                  whileHover={{ scale: 1.05, background: "#f59e0b" }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => handleSend()}
+                  onClick={handleSend}
+                  disabled={!input.trim()}
                   style={{
-                    width: 44, height: 44, borderRadius: 16, border: "1px solid rgba(251, 191, 36, 0.4)",
-                    background: "rgba(5, 10, 24, 0.6)", cursor: "pointer", 
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-                    color: "#fbbf24"
+                    background: "rgba(251, 191, 36, 0.25)",
+                    border: "none",
+                    borderLeft: "1px solid rgba(251, 191, 36, 0.2)",
+                    borderRadius: "0 6px 26px 0",
+                    width: 64,
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: input.trim() ? "pointer" : "default",
+                    opacity: input.trim() ? 1 : 0.4,
+                    padding: 0,
+                    flexShrink: 0,
                   }}
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="22" height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fbbf24"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ marginLeft: 2 }}
+                  >
                     <line x1="22" y1="2" x2="11" y2="13"></line>
                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                   </svg>
