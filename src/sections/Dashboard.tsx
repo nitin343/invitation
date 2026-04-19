@@ -133,7 +133,7 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
       {/* Stats Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 20, marginBottom: 48 }}>
         <StatCard label="Total RSVPs" value={stats.total} color="#fff" />
-        <StatCard label="Attending" value={stats.attending} color="#a7f3d0" />
+        <StatCard label="Attending" value={stats.attending} color="#E6D8B5" />
         <StatCard label="Declined" value={stats.declined} color="#fecaca" />
         <StatCard label="Total Heads" value={stats.totalHeads} color={AMBER} />
       </div>
@@ -193,8 +193,8 @@ export default function Dashboard({ onExit }: { onExit: () => void }) {
                     <td style={tdStyle}>
                       <span style={{ 
                         padding: "4px 10px", borderRadius: 50, fontSize: 10, fontWeight: 700, textTransform: "uppercase",
-                        background: rsvp.rsvpStatus === "attending" ? "rgba(167,243,208,0.1)" : "rgba(254,202,202,0.1)",
-                        color: rsvp.rsvpStatus === "attending" ? "#a7f3d0" : "#fecaca"
+                        background: rsvp.rsvpStatus === "attending" ? "rgba(230,216,181,0.1)" : "rgba(254,202,202,0.1)",
+                        color: rsvp.rsvpStatus === "attending" ? "#E6D8B5" : "#fecaca"
                       }}>
                         {rsvp.rsvpStatus === "attending" ? "Attending" : "Declined"}
                       </span>

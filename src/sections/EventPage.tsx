@@ -35,6 +35,17 @@ const DURATION = {
 // Light System - Signature Radial Gradient
 const LIGHT_WASH = "radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.08), transparent 70%)";
 
+// Kannada Typography System
+const getKannadaStyle = (baseFontSize: string = "16px") => ({
+  fontFamily: '"Noto Serif Kannada", serif',
+  fontSize: baseFontSize,
+  fontWeight: 500,
+  letterSpacing: 0,
+  lineHeight: 1.5,
+  color: "#E8DFD0",
+  textAlign: "center" as const,
+});
+
 const Rule = () => (
   <div style={{
     width: 64, height: 1, margin: "0 auto",
@@ -411,11 +422,11 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
           style={{
             position: "relative", zIndex: 2,
             display: "flex", flexDirection: "column", alignItems: "center",
-            textAlign: "center", padding: "0 24px", transform: "translateY(8vh)",
+            textAlign: "center", padding: "clamp(40px, 8vh, 80px) 24px 0", transform: "translateY(8vh)",
           }}
         >
           <motion.div variants={fadeIn} style={{
-            fontFamily: SANS, fontSize: "clamp(9px,2.8vw,13px)", letterSpacing: "6px",
+            fontFamily: SANS, fontSize: "clamp(12px, 3.5vw, 16px)", letterSpacing: selectedLang === 'kn' ? 0 : "6px", wordSpacing: selectedLang === 'kn' ? "0.15em" : undefined,
             textTransform: "uppercase" as const, color: "#d4f5e9", marginBottom: 22,
             textShadow: "0 2px 18px rgba(0,0,0,0.9)",
           }}>{t.welcome}</motion.div>
@@ -432,7 +443,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
           </motion.div>
           <motion.div variants={fadeIn} style={{
             fontFamily: SERIF, fontSize: "clamp(12px,3.5vw,18px)",
-            fontStyle: "italic", color: "rgba(232,223,208,0.60)", marginBottom: 22,
+            fontStyle: "italic", color: "rgba(232,223,208,0.60)", marginBottom: 22, marginTop: 22,
           }}>{t.togetherFamilies}</motion.div>
           <motion.div variants={fadeIn}><Rule /></motion.div>
           <motion.div variants={fadeIn} style={{
@@ -586,9 +597,12 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                       textTransform: "uppercase" as const, flexShrink: 0, fontWeight: 500,
                     }}>{num}</span>
                     <span style={{
-                      fontFamily: SERIF,
-                      fontSize: isMobile ? "32px" : "clamp(22px, 3vw, 28px)",
-                      color: TEXT_CREAM, lineHeight: 1.1, fontWeight: 500,
+                      fontFamily: selectedLang === 'kn' ? '"Noto Serif Kannada", serif' : SERIF,
+                      fontSize: selectedLang === 'kn' 
+                        ? (isMobile ? "36px" : "clamp(26px, 3.4vw, 32px}")
+                        : (isMobile ? "32px" : "clamp(22px, 3vw, 28px)"),
+                      color: TEXT_CREAM, lineHeight: 1.2, fontWeight: 500,
+                      letterSpacing: selectedLang === 'kn' ? 0 : undefined,
                     }}>{label}</span>
                   </div>
 
@@ -704,7 +718,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                 }}>
                   <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
                     <div style={{ minWidth: 0 }}>
-                      <div style={{ fontFamily: SERIF, fontSize: isMobile ? 20 : 27, lineHeight: 1.12, color: TEXT_CREAM, fontWeight: 600 }}>{e.name}</div>
+                      <div style={{ fontFamily: selectedLang === 'kn' ? '"Noto Serif Kannada", serif' : SERIF, fontSize: selectedLang === 'kn' ? (isMobile ? 22 : 30) : (isMobile ? 20 : 27), lineHeight: 1.2, color: TEXT_CREAM, fontWeight: 600, letterSpacing: selectedLang === 'kn' ? 0 : undefined }}>{e.name}</div>
                       <div style={{ fontFamily: SANS, fontSize: isMobile ? 12 : 13, color: TEXT_MUTED, marginTop: 8, lineHeight: 1.35 }}>{e.time} - {e.dress}</div>
                     </div>
                     <motion.a

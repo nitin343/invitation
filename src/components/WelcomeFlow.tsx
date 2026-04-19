@@ -69,7 +69,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
               transition={{ delay: 1, duration: 1 }}
               style={{ fontFamily: SERIF, fontSize: 24, letterSpacing: 2, color: GOLD }}
             >
-              || श्री गणेशाय नमः ||
+              ॐ गं गणपतये नमः
             </motion.div>
           </motion.div>
         )}
@@ -82,8 +82,8 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
             exit={{ opacity: 0, scale: 1.1 }}
             style={{ display: "flex", flexDirection: "column", gap: 28, alignItems: "center" }}
           >
-            <div style={{ fontFamily: SANS, fontSize: 14, letterSpacing: 3, textTransform: "uppercase", color: "#8C6B3B", fontWeight: 600 }}>
-              Choose Your Language<br/><span style={{ fontSize: 12, letterSpacing: 2, marginTop: 8, display: "block" }}>ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</span>
+            <div style={{ fontFamily: SANS, fontSize: 14, letterSpacing: 0, wordSpacing: "0.15em", textTransform: "uppercase", color: "#8C6B3B", fontWeight: 600 }}>
+              Choose Your Language<br/><span style={{ fontFamily: '"Noto Serif Kannada", serif', fontSize: 16, letterSpacing: 0, wordSpacing: "0.2em", marginTop: 12, display: "block", color: "#7A5C2E", fontWeight: 500, lineHeight: 1.7, maxWidth: "280px", margin: "12px auto 0", opacity: 1 }}>ನಮ್ಮ ವಿಶೇಷ ದಿನಕ್ಕೆ<br/>ನಿಮ್ಮನ್ನು ಆಹ್ವಾನಿಸುತ್ತೇವೆ</span>
             </div>
             {[
               { id: 'en', label: 'English' },
@@ -132,8 +132,8 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
             style={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", position: "relative", background: "linear-gradient(90deg, rgba(200,169,106,0.08) 0%, transparent 50%, rgba(200,169,106,0.08) 100%)" }}
           >
             {/* Center prompt */}
-            <div style={{ position: "absolute", top: "16%", width: "100%", textAlign: "center", letterSpacing: 6, fontSize: 12, color: "#8C6B3B", fontFamily: SANS, fontWeight: 600, pointerEvents: "none", textTransform: "uppercase", opacity: 0.8 }}>
-              Where Do You Belong
+            <div style={{ position: "absolute", top: "16%", width: "100%", textAlign: "center", letterSpacing: selectedLang === 'kn' || selectedLang === 'hi' ? 0 : 6, wordSpacing: selectedLang === 'kn' || selectedLang === 'hi' ? "0.15em" : undefined, fontSize: 12, color: "#8C6B3B", fontFamily: SANS, fontWeight: 600, pointerEvents: "none", textTransform: "uppercase", opacity: 0.8 }}>
+              {t.selectTeam}
             </div>
 
             {/* Center divider with glow */}

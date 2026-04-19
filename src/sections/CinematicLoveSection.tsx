@@ -12,6 +12,7 @@ import {
   useMotionValue,
   useTransform,
 } from "framer-motion";
+import { Language, translations } from "../i18n";
 
 
 // ─── 30-SECOND CINEMATIC TIMELINE ─────────────────────────────────────────────
@@ -34,6 +35,17 @@ const SANS =
 const TEXT_PARCHMENT = "#e8dfd0";
 const AMBER_FLAME    = "rgba(255,183,77,0.9)";
 
+// Kannada Typography System
+const getKannadaStyle = (baseFontSize: string = "16px") => ({
+  fontFamily: '"Noto Serif Kannada", serif',
+  fontSize: baseFontSize,
+  fontWeight: 500,
+  letterSpacing: 0,
+  lineHeight: 1.5,
+  color: "#E8DFD0",
+  textAlign: "center" as const,
+});
+
 // ─── EASING PRESETS ───────────────────────────────────────────────────────────
 const EASE_SOFT_ENTER  = [0.22, 1, 0.36, 1] as [number,number,number,number];
 const EASE_GENTLE_EXIT = [0.4,  0, 0.2,  1] as [number,number,number,number];
@@ -41,7 +53,7 @@ const EASE_REVEAL      = [0.16, 1, 0.3,  1] as [number,number,number,number];
 const EASE_EMOTIONAL   = [0.33, 1, 0.68, 1] as [number,number,number,number];
 const EASE_SHARP       = [0.65, 0, 0.35, 1] as [number,number,number,number];
 
-interface Props { onComplete: () => void; lang?: string; }
+interface Props { onComplete: () => void; lang?: Language; }
 
 // ─── DETERMINISTIC STAR LAYERS ────────────────────────────────────────────────
 interface Star { left:string; top:string; size:number; baseOpacity:number; animDelay:string; animDur:string; }
@@ -61,12 +73,13 @@ function makeStarLayer(count:number, seed:number): Star[] {
   });
 }
 
-export default function CinematicLoveSection({ onComplete }: Props) {
+export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props) {
   const p        = useMotionValue(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const howlRef    = useRef<Howl | null>(null);
   const [muted, setMuted] = useState(false);
   const [audioBlocked, setAudioBlocked] = useState(false);
+  const t = translations[lang];
 
   const toggleMute = () => {
     setMuted(m => {
@@ -429,7 +442,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
                 </div>
                 <div style={{
                   marginTop:14, fontFamily:SANS, fontSize:"3.5vw", fontWeight:500,
-                  letterSpacing:"1px", textTransform:"uppercase", color:"#a7f3d0",
+                  letterSpacing:"1px", textTransform:"uppercase", color:"#E6D8B5",
                 }}>
                   across all that ever was
                 </div>
@@ -481,7 +494,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
                 </div>
                 <div style={{
                   marginTop:14, fontFamily:SANS, fontSize:"3.5vw", fontWeight:500,
-                  letterSpacing:"1px", textTransform:"uppercase", color:"#a7f3d0",
+                  letterSpacing:"1px", textTransform:"uppercase", color:"#E6D8B5",
                 }}>
                   as they always do.
                 </div>
@@ -521,7 +534,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
                   letterSpacing:"1px", textTransform:"uppercase", color:"#ffb74d",
                   opacity:tagOp,
                 }}>
-                  this time… they stay.
+                  {t.tagline}
                 </motion.div>
               </motion.div>
             </div>
@@ -685,7 +698,7 @@ export default function CinematicLoveSection({ onComplete }: Props) {
                 color:"rgba(255,183,77,1)",
                 opacity:tagOp, y:tagY, whiteSpace:"nowrap",
               }} transition={{ ease:EASE_SOFT_ENTER }}>
-                this time… they stay.
+                {t.tagline}
               </motion.div>
             </motion.div>
 

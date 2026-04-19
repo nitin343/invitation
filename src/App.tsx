@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import WelcomeFlow from "./components/WelcomeFlow";
 import CinematicLoveSection from "./sections/CinematicLoveSection";
 import EventPage from "./sections/EventPage";
@@ -15,33 +15,25 @@ export default function App() {
     }
     return "welcome";
   });
+  const [selectedLang, setSelectedLang] = useState<Language>("en");
+  const [selectedTeam, setSelectedTeam] = useState<"groom" | "bride">("groom");
 
-  const [lang, setLang] = useState<Language>(() => {
-    return (localStorage.getItem("wedding_lang") as Language) || "en";
-  });
-
-  const [team, setTeam] = useState<'groom' | 'bride'>(() => {
-    return (localStorage.getItem("wedding_team") as 'groom' | 'bride') || "groom";
-  });
-
-  const handleWelcomeComplete = (selectedLang: Language, selectedTeam: 'groom' | 'bride') => {
-    setLang(selectedLang);
-    setTeam(selectedTeam);
-    localStorage.setItem("wedding_lang", selectedLang);
-    localStorage.setItem("wedding_team", selectedTeam);
+  const handleWelcomeComplete = (lang: Language, team: "groom" | "bride") => {
+    setSelectedLang(lang);
+    setSelectedTeam(team);
     setPhase("cinema");
   };
 
   return (
     <>
-      {phase === "event" && <AIConcierge lang={lang} team={team} />}
+      <AIConcierge />
       {phase === "welcome" && (
         <WelcomeFlow onComplete={handleWelcomeComplete} />
       )}
       {phase === "cinema" && (
-        <CinematicLoveSection onComplete={() => setPhase("event")} lang={lang} />
+        <CinematicLoveSection onComplete={() => setPhase("event")} lang={selectedLang} />
       )}
-      {phase === "event" && <EventPage lang={lang} team={team} />}
+      {phase === "event" && <EventPage lang={selectedLang} team={selectedTeam} />}
       {phase === "dashboard" && <Dashboard onExit={() => {
         window.history.replaceState({}, "", window.location.pathname);
         setPhase("welcome");
