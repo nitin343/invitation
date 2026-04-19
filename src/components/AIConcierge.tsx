@@ -276,7 +276,7 @@ export default function AIConcierge() {
             </div>
 
             {/* Input Container */}
-            <div style={{ padding: "0 24px 28px" }}>
+            <div style={{ padding: "0 0px 0px" }}>
               <div style={{
                 display: "flex", alignItems: "center",
                 background: "rgba(13, 27, 62, 0.6)",
