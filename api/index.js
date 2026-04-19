@@ -44,15 +44,10 @@ IMPORTANT FORMATTING RULES:
 app.use(cors());
 app.use(express.json());
 
-// Health check
-app.get('/api/health', (req, res) => res.json({ status: 'active', time: new Date() }));
-
 // --- AI Chat Endpoint ---
 app.post('/api/ai/chat', async (req, res) => {
   try {
     const { message, history } = req.body;
-    if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is missing");
-
     const contents = [
       { role: "user", parts: [{ text: weddingContext }] },
       { role: "model", parts: [{ text: "I am ready to assist! I will be warm, polite, and use emojis. ✨" }] },
@@ -70,8 +65,7 @@ app.post('/api/ai/chat', async (req, res) => {
 
     res.json({ text: result.text });
   } catch (err) {
-    console.error("AI Error:", err.message);
-    res.status(500).json({ error: "Maya is finishing a quick break. Try again in 10 seconds! ✨", details: err.message });
+    res.status(500).json({ error: "Maya is finishing a quick break. ✨" });
   }
 });
 
@@ -79,8 +73,6 @@ app.post('/api/ai/chat', async (req, res) => {
 app.post('/api/rsvp', async (req, res) => {
   try {
     const { name, phone, attending, meal, guests, message } = req.body;
-    
-    // Ensure guests is a number
     const guestCount = parseInt(guests) || 1;
 
     const rsvp = await prisma.guest.create({
@@ -96,8 +88,7 @@ app.post('/api/rsvp', async (req, res) => {
 
     res.status(201).json({ success: true, id: rsvp.id });
   } catch (err) {
-    console.error("RSVP Error:", err.message);
-    res.status(500).json({ success: false, error: 'Internal Server Error', details: err.message });
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
 
@@ -106,15 +97,49 @@ app.post('/api/ai/generate-wish', async (req, res) => {
   try {
     const { guestName } = req.body;
     const prompt = `Write a short, beautiful, and heartfelt one-sentence wedding wish for Niteen and Apoorva from a guest named ${guestName || 'a friend'}. Make it poetic.`;
-    
     const result = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt
     });
-
     res.json({ wish: result.text });
   } catch (err) {
     res.status(500).json({ error: 'AI is taking a creative break.' });
+  }
+});
+
+// --- Admin Stats ---
+app.get('/api/admin/stats', async (req, res) => {
+  try {
+    const allGuests = await prisma.guest.findMany();
+    const stats = {
+      total: allGuests.length,
+      attending: allGuests.filter(g => g.rsvpStatus === 'attending').length,
+      declined: allGuests.filter(g => g.rsvpStatus === 'declined').length,
+      totalHeads: allGuests.reduce((acc, g) => acc + (g.rsvpStatus === 'attending' ? g.totalGuests : 0), 0),
+      veg: allGuests.filter(g => g.rsvpStatus === 'attending' && g.meal === 'veg').length,
+      guests: allGuests
+    };
+    res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: 'Stats failed.' });
+  }
+});
+
+// --- Admin AI Analysis ---
+app.get('/api/admin/ai-analysis', async (req, res) => {
+  try {
+    const rsvps = await prisma.guest.findMany({ where: { rsvpStatus: 'attending' } });
+    const messages = rsvps.map(r => r.message).filter(Boolean).join('\n');
+    if (!messages) return res.json({ summary: "No messages to analyze yet!" });
+    
+    const prompt = `Analyze these wedding guest messages and provide a 2-sentence summary of the overall vibe and any special requests: \n${messages}`;
+    const result = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: prompt
+    });
+    res.json({ summary: result.text });
+  } catch (err) {
+    res.status(500).json({ error: 'Analysis failed.' });
   }
 });
 
