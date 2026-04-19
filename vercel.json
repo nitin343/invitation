@@ -1,10 +1,13 @@
 {
+  "buildCommand": "npx prisma generate && npm run build",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" }
   ],
   "functions": {
     "api/index.js": {
-      "includeFiles": "prisma/schema.prisma"
+      "includeFiles": "prisma/schema.prisma",
+      "memory": 512,
+      "maxDuration": 60
     }
   }
 }
