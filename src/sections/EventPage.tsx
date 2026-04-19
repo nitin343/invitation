@@ -4,6 +4,19 @@ import { useRSVP } from "../hooks/useRSVP";
 import { Language, translations } from "../i18n";
 import { getCDNUrl } from "../utils/cdn";
 
+// ====== HAPTIC FEEDBACK ======
+const triggerHaptic = (type: 'light' | 'medium' | 'heavy' = 'medium') => {
+  if (!navigator.vibrate) return;
+  
+  const patterns: Record<string, number | number[]> = {
+    light: 10,
+    medium: [20, 10, 20],
+    heavy: [30, 15, 30],
+  };
+  
+  navigator.vibrate(patterns[type]);
+};
+
 // ====== LUXURY DARK DESIGN SYSTEM ======
 const SERIF = '"Playfair Display", "Cormorant Garamond", ui-serif, Georgia, serif';
 const SANS = '"Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial';
@@ -724,6 +737,7 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                     </div>
                     <motion.a
                       href={e.mapsUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open map for ${e.venue}`}
+                      onClick={() => triggerHaptic('medium')}
                       whileHover={{ scale: 1.06, backgroundColor: e.accent.replace(/[\d.]+\)$/, "0.12)") }}
                       whileTap={{ scale: 0.94 }}
                       style={{
@@ -836,10 +850,12 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                     setError(null);
                     const res = await submitRSVP({ ...form, team: selectedTeam, lang: lang || "en" });
                     if (res.success) {
+                      triggerHaptic('heavy');
                       setSubmitted(true);
                       setIsRsvpFocused(false);
                       (document.activeElement as HTMLElement | null)?.blur();
                     } else {
+                      triggerHaptic('light');
                       setError(res.error || languageCopy.somethingWrong);
                     }
                   }}
@@ -876,7 +892,10 @@ export default function EventPage({ lang, team }: EventPageProps = {}) {
                     <span style={{ fontSize: 10, letterSpacing: "2px", textTransform: "uppercase" as const, color: TEXT_MUTED, fontWeight: 500 }}>{t.willAttend}</span>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: isMobile ? 10 : SPACE.md }}>
                       {(["yes", "no"] as const).map(v => (
-                        <button key={v} type="button" onClick={() => setForm(f => ({ ...f, attending: v }))} style={{
+                        <button key={v} type="button" onClick={() => {
+                          triggerHaptic('light');
+                          setForm(f => ({ ...f, attending: v }));
+                        }} style={{
                           ...toggleBase,
                           minHeight: isMobile ? 56 : 48,
                           padding: isMobile ? "10px 8px" : "12px 16px",
