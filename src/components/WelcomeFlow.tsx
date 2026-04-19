@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Language, translations } from "../i18n";
+import { getCDNUrl } from "../utils/cdn";
 
 const GOLD = "rgba(251, 191, 36, 1)";
 const SANS = '"Montserrat", sans-serif';
@@ -14,6 +15,12 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   const [step, setStep] = useState<'ganpati' | 'language' | 'team'>('ganpati');
   const [selectedLang, setSelectedLang] = useState<Language>('en');
   const [selectedTeam, setSelectedTeam] = useState<'groom' | 'bride' | null>(null);
+
+  // Test CDN URL generation
+  const frameUrl = getCDNUrl('frame4', { width: 1200 });
+  const ganeshUrl = getCDNUrl('ganesh', { width: 600 });
+  console.log('🟢 WelcomeFlow mounted - Frame URL:', frameUrl);
+  console.log('🟢 WelcomeFlow mounted - Ganesh URL:', ganeshUrl);
 
   useEffect(() => {
     if (step === 'ganpati') {
@@ -37,7 +44,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   return (
     <div style={{ 
       position: "fixed", inset: 0, zIndex: 10000, 
-      backgroundImage: "url(/assets/frame4.png)",
+      backgroundImage: `url(${frameUrl})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
@@ -56,7 +63,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
             style={{ textAlign: "center" }}
           >
             <motion.img
-              src="/assets/ganesh.png"
+              src={ganeshUrl}
               alt="Ganesh" 
               initial={{ scale: 0.8, filter: "brightness(0)" }}
               animate={{ scale: 1, filter: "brightness(1)" }}

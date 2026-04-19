@@ -13,6 +13,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { Language, translations } from "../i18n";
+import { getCDNUrl } from "../utils/cdn";
 
 
 // ─── 30-SECOND CINEMATIC TIMELINE ─────────────────────────────────────────────
@@ -90,7 +91,7 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
 
   const startAudio = () => {
     const h = new Howl({
-      src: ["/assets/sahilmadan-wedding-invitation-421393.mp3"],
+      src: [getCDNUrl('sahilmadan-wedding-invitation-421393.mp3', { isAudio: true })],
       loop: true,
       volume: 0,
       html5: true,          // streaming — starts faster
@@ -328,7 +329,7 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
       {showVid && (
         <motion.video
           ref={videoRef}
-          src="/assets/ring opening.mp4"
+          src={getCDNUrl('ring opening.mp4', { isVideo: true })}
           autoPlay muted loop playsInline
           aria-hidden="true"
           style={{
@@ -344,7 +345,7 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
       {/* z:7  Ring */}
       {showRing && (
         <motion.img
-          src="/assets/couple-ring.jpeg"
+          src={getCDNUrl('couple-ring', { width: 1200 })}
           alt="" draggable={false}
           style={{
             position:"absolute", inset:0, zIndex:7,
@@ -364,7 +365,7 @@ export default function CinematicLoveSection({ onComplete, lang = 'en' }: Props)
           style={{ position:"absolute", inset:0, zIndex:9 }}
         >
           <motion.img
-            src="/assets/couple-photo-1.png"
+            src={getCDNUrl('couple-photo-1', { width: 1200 })}
             alt="" draggable={false}
             style={{
               position:"absolute", inset:0,
