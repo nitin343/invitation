@@ -578,33 +578,18 @@ export default function EventPage() {
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
                       style={{ display: "flex", flexDirection: "column", gap: 20, overflow: "hidden" }}
                     >
-                      <div style={{ display: "flex", gap: 16, flexDirection: isMobile ? "column" : "row" }}>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
-                          <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Total Guests</span>
-                          <input
-                            type="number"
-                            min={1}
-                            value={form.guests}
-                            onChange={e => setForm(f => ({ ...f, guests: parseInt(e.target.value) || 1 }))}
-                            style={inputStyle}
-                            placeholder="Number of guests"
-                            onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
-                            onBlur={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
-                          />
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1 }}>
-                          <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Meal Preference</span>
-                          <div style={{ display: "flex", gap: 8 }}>
-                            {(["veg"] as const).map(v => (
-                              <button key={v} type="button" onClick={() => setForm(f => ({ ...f, meal: v }))} style={{
-                                ...toggleBase, flex: 1, fontSize: 9, padding: "12px 10px",
-                                borderColor: "rgba(167,243,208,0.85)",
-                                color: "rgba(167,243,208,0.90)",
-                                background: "rgba(167,243,208,0.08)",
-                              }}>Vegetarian Only</button>
-                            ))}
-                          </div>
-                        </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                        <span style={{ fontSize: 9, letterSpacing: "5px", textTransform: "uppercase" as const, color: "rgba(167,243,208,0.55)" }}>Total Guests</span>
+                        <input
+                          type="number"
+                          min={1}
+                          value={form.guests}
+                          onChange={e => setForm(f => ({ ...f, guests: parseInt(e.target.value) || 1 }))}
+                          style={inputStyle}
+                          placeholder="Number of guests"
+                          onFocus={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.45)")}
+                          onBlur={e => (e.currentTarget.style.borderColor = "rgba(255,183,77,0.14)")}
+                        />
                       </div>
                     </motion.div>
                   )}
