@@ -3,8 +3,19 @@ const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
 const { GoogleGenAI } = require('@google/genai');
 
+// Initialize outside for connection pooling
+let prisma;
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient();
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient();
+  }
+  prisma = global.prisma;
+}
+
 const app = express();
-const prisma = new PrismaClient();
+
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
@@ -33,10 +44,15 @@ IMPORTANT FORMATTING RULES:
 app.use(cors());
 app.use(express.json());
 
+// Health check
+app.get('/api/health', (req, res) => res.json({ status: 'active', time: new Date() }));
+
 // --- AI Chat Endpoint ---
 app.post('/api/ai/chat', async (req, res) => {
   try {
     const { message, history } = req.body;
+    if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is missing");
+
     const contents = [
       { role: "user", parts: [{ text: weddingContext }] },
       { role: "model", parts: [{ text: "I am ready to assist! I will be warm, polite, and use emojis. ✨" }] },
@@ -54,7 +70,8 @@ app.post('/api/ai/chat', async (req, res) => {
 
     res.json({ text: result.text });
   } catch (err) {
-    res.status(500).json({ error: "Maya is finishing a quick break. Try again in 10 seconds! ✨" });
+    console.error("AI Error:", err.message);
+    res.status(500).json({ error: "Maya is finishing a quick break. Try again in 10 seconds! ✨", details: err.message });
   }
 });
 
@@ -62,16 +79,25 @@ app.post('/api/ai/chat', async (req, res) => {
 app.post('/api/rsvp', async (req, res) => {
   try {
     const { name, phone, attending, meal, guests, message } = req.body;
+    
+    // Ensure guests is a number
+    const guestCount = parseInt(guests) || 1;
+
     const rsvp = await prisma.guest.create({
       data: {
-        name, phone,
+        name, 
+        phone: phone || "",
         rsvpStatus: attending === 'yes' ? 'attending' : 'declined',
-        meal, totalGuests: guests, message
+        meal: meal || "veg", 
+        totalGuests: guestCount, 
+        message: message || ""
       }
     });
+
     res.status(201).json({ success: true, id: rsvp.id });
   } catch (err) {
-    res.status(500).json({ success: false, error: 'Internal Server Error' });
+    console.error("RSVP Error:", err.message);
+    res.status(500).json({ success: false, error: 'Internal Server Error', details: err.message });
   }
 });
 
@@ -80,10 +106,12 @@ app.post('/api/ai/generate-wish', async (req, res) => {
   try {
     const { guestName } = req.body;
     const prompt = `Write a short, beautiful, and heartfelt one-sentence wedding wish for Niteen and Apoorva from a guest named ${guestName || 'a friend'}. Make it poetic.`;
+    
     const result = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt
     });
+
     res.json({ wish: result.text });
   } catch (err) {
     res.status(500).json({ error: 'AI is taking a creative break.' });
