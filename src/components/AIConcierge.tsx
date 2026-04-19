@@ -91,7 +91,7 @@ export default function AIConcierge() {
         parts: [{ text: m.text }]
       }));
 
-      const res = await fetch("http://localhost:5000/api/ai/chat", {
+      const res = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMsg, history }),

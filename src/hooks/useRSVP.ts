@@ -9,7 +9,7 @@ interface RSVPData {
   message: string;
 }
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "/api";
 
 export function useRSVP() {
   const [isSubmitting, setIsSubmitting] = useState(false);
